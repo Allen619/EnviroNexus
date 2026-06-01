@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+.env
+.env.local
+.venv/
+uv.lock
+files
+docs
