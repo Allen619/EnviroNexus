@@ -1,0 +1,15 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - KNOWLEDGE_SERVICE_BASE_URL=http://knowledge:8000
+      - LOG_LEVEL=INFO
+    depends_on:
+      - knowledge
+
+  knowledge:
+    image: enviro-nexus-knowledge:latest
+    ports:
+      - "8000:8000"
