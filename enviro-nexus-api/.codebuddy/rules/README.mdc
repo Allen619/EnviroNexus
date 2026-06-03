@@ -1,0 +1,13 @@
+---
+description: 
+alwaysApply: true
+enabled: true
+updatedAt: 2026-06-02T06:04:52.946Z
+provider: 
+---
+
+请先阅读当前仓库 README、docs 中的接口契约和相关代码。
+在动手前先输出实现计划。
+不要扩大任务范围。
+实现后给出验证命令。
+如果发现接口契约和代码不一致，先指出问题，不要自行大改。
