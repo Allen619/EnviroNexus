@@ -2,10 +2,17 @@ node_modules/
 dist/
 build/
 __pycache__/
+*.py[cod]
 *.pyc
+.pytest_cache/
 .env
 .env.local
 .venv/
 uv.lock
 files
 docs
+!docs/
+!docs/superpowers-skills/
+!docs/superpowers-skills/**
+!enviro-nexus-knowledge/docs/
+!enviro-nexus-knowledge/docs/**

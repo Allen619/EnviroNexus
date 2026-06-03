@@ -1,0 +1,156 @@
+{
+  "schema_version": "method_card.v0.1",
+  "card_id": "water_ph_hj1147_2020",
+  "card_version": 1,
+  "identity": {
+    "category": "水质",
+    "factor": "pH 值",
+    "factors": [
+      {
+        "name": "pH 值",
+        "aliases": ["pH", "PH", "pH值", "PH值", "酸碱度"]
+      }
+    ],
+    "aliases": ["pH", "PH", "pH值", "PH值", "酸碱度"],
+    "standard_code": "HJ 1147-2020",
+    "standard_name": "水质 pH 值的测定 电极法",
+    "method_name": "电极法"
+  },
+  "applicability": {
+    "scope_summary": "适用于地表水、地下水、生活污水和工业废水中 pH 值的测定，测定范围为 0～14。",
+    "sample_types": ["地表水", "地下水", "生活污水", "工业废水"],
+    "exclusions": [],
+    "evidence_ids": ["ev_scope"]
+  },
+  "measurement": {
+    "principle": "pH 值由参比电极和氢离子指示电极组成的测量电池电动势而得，仪器直接以 pH 读数表示。",
+    "instrument": "酸度计、分体式 pH 电极或复合 pH 电极、温度计、采样瓶和烧杯",
+    "unit": null,
+    "range": {
+      "lower": "0",
+      "upper": "14",
+      "unit": "pH"
+    },
+    "evidence_ids": ["ev_principle", "ev_instrument"]
+  },
+  "requirements": [
+    {
+      "requirement_id": "req_sample",
+      "type": "sample_collection",
+      "title": "样品采集与保存",
+      "content": "按照相关监测规范采集样品，可现场测定；实验室测定时样品应充满采样瓶并立即密封，2 h 内完成测定。",
+      "evidence_ids": ["ev_sample"]
+    },
+    {
+      "requirement_id": "req_calibration",
+      "type": "analysis_step",
+      "title": "仪器校准",
+      "content": "使用两种合适的标准缓冲溶液进行两点校准，样品 pH 值宜位于两种缓冲溶液范围之间。",
+      "evidence_ids": ["ev_analysis"]
+    },
+    {
+      "requirement_id": "req_result",
+      "type": "result_expression",
+      "title": "结果表示",
+      "content": "测定结果保留小数点后 1 位，并注明样品测定时的温度；超出 0～14 范围时按强酸或强碱超范围报出。",
+      "evidence_ids": ["ev_result"]
+    },
+    {
+      "requirement_id": "req_interference",
+      "type": "interference",
+      "title": "干扰控制",
+      "content": "强酸、强碱、低离子强度、高盐度、高氟和温度影响等情形应选择适用电极或进行温度补偿。",
+      "evidence_ids": ["ev_interference"]
+    }
+  ],
+  "qa_qc": [
+    {
+      "item_id": "qa_calibration",
+      "title": "校准与质控",
+      "content": "每批样品测定前应校准仪器；每 20 个样品或每批次应分析有证标准样品或标准物质，并分析平行样。",
+      "evidence_ids": ["ev_qa"]
+    }
+  ],
+  "answer_template": {
+    "short_answer": "pH 值可采用 HJ 1147-2020《水质 pH 值的测定 电极法》测定。",
+    "evidence_ids": ["ev_scope", "ev_principle"]
+  },
+  "source_document": {
+    "doc_id": "doc_hj1147_2020",
+    "standard_code": "HJ 1147-2020",
+    "title": "水质 pH 值的测定 电极法"
+  },
+  "evidence_refs": [
+    {
+      "evidence_id": "ev_scope",
+      "source_title": "HJ 1147-2020",
+      "section": "1 适用范围",
+      "page": 1,
+      "summary": "标准规定了测定水中 pH 值的电极法，适用于地表水、地下水、生活污水和工业废水，测定范围为 0～14。"
+    },
+    {
+      "evidence_id": "ev_principle",
+      "source_title": "HJ 1147-2020",
+      "section": "3 方法原理",
+      "page": 1,
+      "summary": "pH 值由参比电极和氢离子指示电极组成的测量电池电动势而得，仪器直接显示 pH 读数。"
+    },
+    {
+      "evidence_id": "ev_interference",
+      "source_title": "HJ 1147-2020",
+      "section": "4 干扰和消除",
+      "page": 1,
+      "summary": "颜色、浊度等不干扰测定；强酸强碱、低离子强度、高盐度、高氟和温度影响需采取相应电极或补偿措施。"
+    },
+    {
+      "evidence_id": "ev_instrument",
+      "source_title": "HJ 1147-2020",
+      "section": "6 仪器和设备",
+      "page": 2,
+      "summary": "测定使用精度 0.01 pH 单位且具温度补偿功能的酸度计，以及 pH 电极、温度计、采样瓶等设备。"
+    },
+    {
+      "evidence_id": "ev_sample",
+      "source_title": "HJ 1147-2020",
+      "section": "7 样品",
+      "page": 2,
+      "summary": "样品可现场测定；实验室测定时采样瓶应充满并立即密封，2 h 内完成测定。"
+    },
+    {
+      "evidence_id": "ev_analysis",
+      "source_title": "HJ 1147-2020",
+      "section": "8 分析步骤",
+      "page": 3,
+      "summary": "测定前活化维护电极，使用两种标准缓冲溶液进行校准，待读数稳定后记录样品 pH 值。"
+    },
+    {
+      "evidence_id": "ev_result",
+      "source_title": "HJ 1147-2020",
+      "section": "9 结果表示",
+      "page": 4,
+      "summary": "测定结果保留小数点后 1 位并注明温度；超出 0～14 测量范围时以强酸或强碱超范围报出。"
+    },
+    {
+      "evidence_id": "ev_qa",
+      "source_title": "HJ 1147-2020",
+      "section": "11 质量保证和质量控制",
+      "page": 4,
+      "summary": "每批样品测定前应校准仪器，并按批次或每 20 个样品进行有证标准样品或平行样质控。"
+    }
+  ],
+  "governance": {
+    "review_status": "approved",
+    "answer_visibility": "enabled"
+  },
+  "change_log": [
+    {
+      "version": 1,
+      "date": "2026-06-03",
+      "description": "Day 1.5 基于 markdown 人工整理 pH MethodCard，并补充回答字段 evidence linkage。"
+    }
+  ],
+  "extensions": {
+    "manual_extract_source": "files/poc-files/水质 pH的测定 电极法 HJ 1147-2020.md",
+    "needs_pdf_check": true
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "schema_version": "method_card.v0.1",
+  "card_id": "water_colority_hj1182_2021",
+  "card_version": 1,
+  "identity": {
+    "category": "水质",
+    "factor": "色度",
+    "factors": [
+      {
+        "name": "色度",
+        "aliases": ["色度", "水质色度", "颜色", "稀释倍数"]
+      }
+    ],
+    "aliases": ["色度", "水质色度", "颜色", "稀释倍数"],
+    "standard_code": "HJ 1182-2021",
+    "standard_name": "水质 色度的测定 稀释倍数法",
+    "method_name": "稀释倍数法"
+  },
+  "applicability": {
+    "scope_summary": "适用于生活污水和工业废水色度的测定，方法检出限和测定下限为 2 倍。",
+    "sample_types": ["生活污水", "工业废水"],
+    "exclusions": [],
+    "evidence_ids": ["ev_scope"]
+  },
+  "measurement": {
+    "principle": "将样品稀释至与水相比无视觉感官区别，以稀释后的总体积与原体积的比表达颜色强度。",
+    "instrument": "具塞比色管、容量瓶、量筒、pH 计、采样瓶、冷白色光源和一般实验室常用设备",
+    "unit": "倍",
+    "range": {
+      "lower": "2",
+      "upper": null,
+      "unit": "倍"
+    },
+    "evidence_ids": ["ev_principle", "ev_equipment"]
+  },
+  "requirements": [
+    {
+      "requirement_id": "req_personnel_environment",
+      "type": "field_condition",
+      "title": "人员、环境和设备",
+      "content": "检测人员应视力正常并能准确分辨色彩；测定背景和光源应满足标准要求，使用无色透明比色管等设备。",
+      "evidence_ids": ["ev_equipment"]
+    },
+    {
+      "requirement_id": "req_sample",
+      "type": "sample_preservation",
+      "title": "样品采集、保存和制备",
+      "content": "样品采集后应在 4 ℃以下冷藏、避光保存，通常 24 h 内测定；测定前静置 15 min 后取上层非沉降部分。",
+      "evidence_ids": ["ev_sample", "ev_preparation"]
+    },
+    {
+      "requirement_id": "req_analysis",
+      "type": "analysis_step",
+      "title": "稀释与目视比色",
+      "content": "先进行初级稀释，再按自然倍数逐级稀释，直至试料与水无法区别，并以目视比色确认终点。",
+      "evidence_ids": ["ev_analysis"]
+    },
+    {
+      "requirement_id": "req_result",
+      "type": "result_expression",
+      "title": "结果计算与表示",
+      "content": "样品稀释倍数按 D = D1 × 10^(n-1) 计算，结果以稀释倍数值表示，并报告颜色特征和 pH 值。",
+      "evidence_ids": ["ev_result"]
+    }
+  ],
+  "qa_qc": [
+    {
+      "item_id": "qa_color_vision",
+      "title": "色觉检查",
+      "content": "定期使用《色觉检查图》对检测人员进行色觉检查，回答问题的正确率应达到 100%。",
+      "evidence_ids": ["ev_qa"]
+    }
+  ],
+  "answer_template": {
+    "short_answer": "水质色度可采用 HJ 1182-2021《水质 色度的测定 稀释倍数法》测定。",
+    "evidence_ids": ["ev_scope", "ev_principle"]
+  },
+  "source_document": {
+    "doc_id": "doc_hj1182_2021",
+    "standard_code": "HJ 1182-2021",
+    "title": "水质 色度的测定 稀释倍数法"
+  },
+  "evidence_refs": [
+    {
+      "evidence_id": "ev_scope",
+      "source_title": "HJ 1182-2021",
+      "section": "1 适用范围",
+      "page": 1,
+      "summary": "标准规定水质色度的稀释倍数法，适用于生活污水和工业废水色度测定，检出限和测定下限为 2 倍。"
+    },
+    {
+      "evidence_id": "ev_principle",
+      "source_title": "HJ 1182-2021",
+      "section": "4 方法原理",
+      "page": 1,
+      "summary": "将样品稀释至与水相比无视觉感官区别，以稀释后的总体积与原体积的比表达颜色强度。"
+    },
+    {
+      "evidence_id": "ev_equipment",
+      "source_title": "HJ 1182-2021",
+      "section": "6 人员、环境和设备",
+      "page": 1,
+      "summary": "检测人员应能准确分辨色彩，实验背景、光源、比色管、pH 计和采样瓶等应满足标准要求。"
+    },
+    {
+      "evidence_id": "ev_sample",
+      "source_title": "HJ 1182-2021",
+      "section": "7.1 样品采集和保存",
+      "page": 2,
+      "summary": "样品采集后应 4 ℃以下冷藏、避光保存，24 h 内测定；可生化性差样品可冷藏保存 15 d。"
+    },
+    {
+      "evidence_id": "ev_preparation",
+      "source_title": "HJ 1182-2021",
+      "section": "7.2 试样的制备",
+      "page": 2,
+      "summary": "样品倒入量筒静置 15 min，倾取上层非沉降部分作为试样测定。"
+    },
+    {
+      "evidence_id": "ev_analysis",
+      "source_title": "HJ 1182-2021",
+      "section": "8 分析步骤",
+      "page": 2,
+      "summary": "通过初级稀释和自然倍数稀释逐级观察，直到稀释试料与水无法区别，并记录稀释次数和倍数。"
+    },
+    {
+      "evidence_id": "ev_result",
+      "source_title": "HJ 1182-2021",
+      "section": "9 结果计算与表示",
+      "page": 3,
+      "summary": "样品稀释倍数按 D = D1 × 10^(n-1) 计算，结果以稀释倍数值表示，并报告颜色特征和 pH 值。"
+    },
+    {
+      "evidence_id": "ev_qa",
+      "source_title": "HJ 1182-2021",
+      "section": "11 质量保证和质量控制",
+      "page": 3,
+      "summary": "应定期用《色觉检查图》检查检测人员色觉，回答正确率需达到 100%。"
+    }
+  ],
+  "governance": {
+    "review_status": "approved",
+    "answer_visibility": "enabled"
+  },
+  "change_log": [
+    {
+      "version": 1,
+      "date": "2026-06-03",
+      "description": "Day 1.5 基于 markdown 人工整理色度 MethodCard。"
+    }
+  ],
+  "extensions": {
+    "manual_extract_source": "files/poc-files/水质 色度的测定 稀释倍数法 HJ 1182-2021.md",
+    "needs_pdf_check": true
+  }
+}
