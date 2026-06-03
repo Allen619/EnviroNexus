@@ -1,0 +1,77 @@
+[
+  {
+    "doc_id": "doc_hj1147_2020",
+    "source_type": "standard",
+    "title": "水质 pH 值的测定 电极法",
+    "standard_code": "HJ 1147-2020",
+    "file_path": "files/poc-files/水质 pH的测定 电极法 HJ 1147-2020.md",
+    "status": "active",
+    "metadata": {
+      "category": "水质",
+      "derived_from": "files/poc-files/水质 pH的测定 电极法 HJ 1147-2020.md",
+      "source_format": "markdown",
+      "manual_extract_status": "completed",
+      "needs_pdf_check": true
+    }
+  },
+  {
+    "doc_id": "doc_hj1182_2021",
+    "source_type": "standard",
+    "title": "水质 色度的测定 稀释倍数法",
+    "standard_code": "HJ 1182-2021",
+    "file_path": "files/poc-files/水质 色度的测定 稀释倍数法 HJ 1182-2021.md",
+    "status": "active",
+    "metadata": {
+      "category": "水质",
+      "derived_from": "files/poc-files/水质 色度的测定 稀释倍数法 HJ 1182-2021.md",
+      "source_format": "markdown",
+      "manual_extract_status": "completed",
+      "needs_pdf_check": true
+    }
+  },
+  {
+    "doc_id": "doc_hj1445_2026",
+    "source_type": "standard",
+    "title": "水质 高锰酸盐指数的测定 草酸钠还原酸性滴定法",
+    "standard_code": "HJ 1445-2026",
+    "file_path": "files/poc-files/HJ 1445-2026 水质 高锰酸盐指数的测定 草酸钠还原酸性滴定法.md",
+    "status": "active",
+    "metadata": {
+      "category": "水质",
+      "derived_from": "files/poc-files/HJ 1445-2026 水质 高锰酸盐指数的测定 草酸钠还原酸性滴定法.md",
+      "source_format": "markdown",
+      "manual_extract_status": "completed",
+      "needs_pdf_check": true
+    }
+  },
+  {
+    "doc_id": "doc_hj1287_2023",
+    "source_type": "standard",
+    "title": "固定污染源废气 烟气黑度的测定 林格曼望远镜法",
+    "standard_code": "HJ 1287-2023",
+    "file_path": "files/poc-files/HJ 1287-2023 固定污染源废气 烟气黑度的测定 林格曼望远镜法.md",
+    "status": "active",
+    "metadata": {
+      "category": "固定污染源废气",
+      "derived_from": "files/poc-files/HJ 1287-2023 固定污染源废气 烟气黑度的测定 林格曼望远镜法.md",
+      "source_format": "markdown",
+      "manual_extract_status": "completed",
+      "needs_pdf_check": true
+    }
+  },
+  {
+    "doc_id": "doc_hj1332_2023",
+    "source_type": "standard",
+    "title": "固定污染源废气 总烃、甲烷和非甲烷总烃的测定 便携式气相色谱-氢火焰离子化检测器法",
+    "standard_code": "HJ 1332-2023",
+    "file_path": "files/poc-files/HJ 1332-2023 固定污染源废气 总烃、甲烷和非甲烷总烃的测定 便携式气相色谱-氢火焰离子化检测器法.md",
+    "status": "active",
+    "metadata": {
+      "category": "固定污染源废气",
+      "derived_from": "files/poc-files/HJ 1332-2023 固定污染源废气 总烃、甲烷和非甲烷总烃的测定 便携式气相色谱-氢火焰离子化检测器法.md",
+      "source_format": "markdown",
+      "manual_extract_status": "completed",
+      "needs_pdf_check": true
+    }
+  }
+]

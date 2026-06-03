@@ -1,0 +1,177 @@
+{
+  "schema_version": "method_card.v0.1",
+  "card_id": "water_permanganate_index_hj1445_2026",
+  "card_version": 1,
+  "identity": {
+    "category": "水质",
+    "factor": "高锰酸盐指数",
+    "factors": [
+      {
+        "name": "高锰酸盐指数",
+        "aliases": ["高锰酸盐指数", "CODMn", "CODmn", "IMn", "耗氧量"]
+      }
+    ],
+    "aliases": ["高锰酸盐指数", "CODMn", "CODmn", "IMn", "耗氧量"],
+    "standard_code": "HJ 1445-2026",
+    "standard_name": "水质 高锰酸盐指数的测定 草酸钠还原酸性滴定法",
+    "method_name": "草酸钠还原酸性滴定法"
+  },
+  "applicability": {
+    "scope_summary": "适用于地表水和地下水中氯离子浓度小于等于 300 mg/L 的高锰酸盐指数测定。",
+    "sample_types": ["地表水", "地下水"],
+    "exclusions": ["氯离子浓度大于 300 mg/L 且稀释后仍不满足滴定条件的样品"],
+    "evidence_ids": ["ev_scope", "ev_interference"]
+  },
+  "measurement": {
+    "principle": "样品加入高锰酸钾和硫酸加热氧化，再加入草酸钠还原剩余高锰酸钾，并用高锰酸钾回滴计算高锰酸盐指数。",
+    "instrument": "电热恒温水浴锅、棕色酸式滴定管、锥形瓶、采样瓶，或等效半自动/全自动高锰酸盐指数分析仪",
+    "unit": "mg/L",
+    "range": {
+      "lower": "1.6",
+      "upper": "4.5",
+      "unit": "mg/L"
+    },
+    "evidence_ids": ["ev_principle", "ev_instrument"]
+  },
+  "requirements": [
+    {
+      "requirement_id": "req_sample",
+      "type": "sample_preservation",
+      "title": "样品保存",
+      "content": "样品按地表水或地下水监测规范采集，6 h 内完成分析；不能立即分析时加硫酸至 pH≤2，4 ℃以下冷藏并 48 h 内测定。",
+      "evidence_ids": ["ev_sample"]
+    },
+    {
+      "requirement_id": "req_interference",
+      "type": "interference",
+      "title": "氯离子干扰",
+      "content": "氯离子浓度大于 300 mg/L 时对结果有正干扰，可采用稀释消除；不能满足要求时应选择其他适用方法。",
+      "evidence_ids": ["ev_interference"]
+    },
+    {
+      "requirement_id": "req_analysis",
+      "type": "analysis_step",
+      "title": "样品测定",
+      "content": "取 100 mL 混匀样品，加入硫酸和高锰酸钾，在沸点温度下加热 30 min±2 min 后以草酸钠还原并回滴。",
+      "evidence_ids": ["ev_analysis"]
+    },
+    {
+      "requirement_id": "req_result",
+      "type": "result_expression",
+      "title": "结果计算与表示",
+      "content": "按标准公式计算空白和样品高锰酸盐指数，结果以 O2 计的 mg/L 表示。",
+      "evidence_ids": ["ev_result"]
+    },
+    {
+      "requirement_id": "req_safety",
+      "type": "safety_note",
+      "title": "安全注意",
+      "content": "硫酸具有较强腐蚀性，试剂配制应在通风橱内进行并佩戴防护器具。",
+      "evidence_ids": ["ev_safety"]
+    }
+  ],
+  "qa_qc": [
+    {
+      "item_id": "qa_batch",
+      "title": "批次质控",
+      "content": "每批样品至少进行 2 次空白试验；高锰酸钾标准溶液平行标定体积差不大于 0.20 mL；每批或每 20 个样品做平行样和有证标准样品。",
+      "evidence_ids": ["ev_qa"]
+    }
+  ],
+  "answer_template": {
+    "short_answer": "高锰酸盐指数可采用 HJ 1445-2026《水质 高锰酸盐指数的测定 草酸钠还原酸性滴定法》测定。",
+    "evidence_ids": ["ev_scope", "ev_principle"]
+  },
+  "source_document": {
+    "doc_id": "doc_hj1445_2026",
+    "standard_code": "HJ 1445-2026",
+    "title": "水质 高锰酸盐指数的测定 草酸钠还原酸性滴定法"
+  },
+  "evidence_refs": [
+    {
+      "evidence_id": "ev_safety",
+      "source_title": "HJ 1445-2026",
+      "section": "警告",
+      "page": 1,
+      "summary": "硫酸具有较强腐蚀性，试剂配制应在通风橱内进行，并按要求佩戴防护器具。"
+    },
+    {
+      "evidence_id": "ev_scope",
+      "source_title": "HJ 1445-2026",
+      "section": "1 适用范围",
+      "page": 1,
+      "summary": "标准适用于地表水和地下水中氯离子浓度小于等于 300 mg/L 的高锰酸盐指数测定，检出限为 0.4 mg/L。"
+    },
+    {
+      "evidence_id": "ev_definition",
+      "source_title": "HJ 1445-2026",
+      "section": "3 术语和定义",
+      "page": 1,
+      "summary": "高锰酸盐指数在地下水常规指标中称为耗氧量，CODMn 法，以 O2 计。"
+    },
+    {
+      "evidence_id": "ev_principle",
+      "source_title": "HJ 1445-2026",
+      "section": "4 方法原理",
+      "page": 1,
+      "summary": "样品经高锰酸钾和硫酸加热氧化后，加入草酸钠还原剩余高锰酸钾，再用高锰酸钾回滴计算结果。"
+    },
+    {
+      "evidence_id": "ev_interference",
+      "source_title": "HJ 1445-2026",
+      "section": "5 干扰和消除",
+      "page": 1,
+      "summary": "氯离子浓度大于 300 mg/L 时会产生正干扰，可采用稀释消除，不能满足要求时应选择其他方法。"
+    },
+    {
+      "evidence_id": "ev_instrument",
+      "source_title": "HJ 1445-2026",
+      "section": "7 仪器和设备",
+      "page": 2,
+      "summary": "测定使用采样瓶、水浴锅、棕色酸式滴定管、锥形瓶，也可使用符合要求的半自动或全自动分析仪。"
+    },
+    {
+      "evidence_id": "ev_sample",
+      "source_title": "HJ 1445-2026",
+      "section": "8 样品",
+      "page": 2,
+      "summary": "样品采集后 6 h 内分析；不能立即分析时加硫酸至 pH≤2，4 ℃以下冷藏并 48 h 内测定。"
+    },
+    {
+      "evidence_id": "ev_analysis",
+      "source_title": "HJ 1445-2026",
+      "section": "9 分析步骤",
+      "page": 3,
+      "summary": "样品先判定氯离子浓度，再加入硫酸和高锰酸钾加热 30 min±2 min，趁热以高锰酸钾滴定。"
+    },
+    {
+      "evidence_id": "ev_result",
+      "source_title": "HJ 1445-2026",
+      "section": "10 结果计算与表示",
+      "page": 4,
+      "summary": "按标准公式计算空白和样品高锰酸盐指数，以 O2 计的质量浓度表示。"
+    },
+    {
+      "evidence_id": "ev_qa",
+      "source_title": "HJ 1445-2026",
+      "section": "12 质量保证和质量控制",
+      "page": 4,
+      "summary": "每批样品至少做 2 次空白试验，并按要求进行标准溶液平行标定、平行样和有证标准样品质控。"
+    }
+  ],
+  "governance": {
+    "review_status": "approved",
+    "answer_visibility": "enabled"
+  },
+  "change_log": [
+    {
+      "version": 1,
+      "date": "2026-06-03",
+      "description": "Day 1.5 基于 markdown 人工整理高锰酸盐指数 MethodCard。"
+    }
+  ],
+  "extensions": {
+    "manual_extract_source": "files/poc-files/HJ 1445-2026 水质 高锰酸盐指数的测定 草酸钠还原酸性滴定法.md",
+    "needs_pdf_check": true
+  }
+}

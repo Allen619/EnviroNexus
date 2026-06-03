@@ -1,0 +1,170 @@
+[
+  {
+    "alias": "pH 值",
+    "normalized_alias": "ph",
+    "factor": "pH 值",
+    "card_id": "water_ph_hj1147_2020",
+    "priority": 10,
+    "enabled": true
+  },
+  {
+    "alias": "酸碱度",
+    "normalized_alias": "酸碱度",
+    "factor": "pH 值",
+    "card_id": "water_ph_hj1147_2020",
+    "priority": 30,
+    "enabled": true
+  },
+  {
+    "alias": "色度",
+    "normalized_alias": "色度",
+    "factor": "色度",
+    "card_id": "water_colority_hj1182_2021",
+    "priority": 10,
+    "enabled": true
+  },
+  {
+    "alias": "水质色度",
+    "normalized_alias": "水质色度",
+    "factor": "色度",
+    "card_id": "water_colority_hj1182_2021",
+    "priority": 20,
+    "enabled": true
+  },
+  {
+    "alias": "颜色",
+    "normalized_alias": "颜色",
+    "factor": "色度",
+    "card_id": "water_colority_hj1182_2021",
+    "priority": 40,
+    "enabled": true
+  },
+  {
+    "alias": "稀释倍数",
+    "normalized_alias": "稀释倍数",
+    "factor": "色度",
+    "card_id": "water_colority_hj1182_2021",
+    "priority": 50,
+    "enabled": true
+  },
+  {
+    "alias": "高锰酸盐指数",
+    "normalized_alias": "高锰酸盐指数",
+    "factor": "高锰酸盐指数",
+    "card_id": "water_permanganate_index_hj1445_2026",
+    "priority": 10,
+    "enabled": true
+  },
+  {
+    "alias": "CODMn",
+    "normalized_alias": "codmn",
+    "factor": "高锰酸盐指数",
+    "card_id": "water_permanganate_index_hj1445_2026",
+    "priority": 20,
+    "enabled": true
+  },
+  {
+    "alias": "IMn",
+    "normalized_alias": "imn",
+    "factor": "高锰酸盐指数",
+    "card_id": "water_permanganate_index_hj1445_2026",
+    "priority": 30,
+    "enabled": true
+  },
+  {
+    "alias": "耗氧量",
+    "normalized_alias": "耗氧量",
+    "factor": "高锰酸盐指数",
+    "card_id": "water_permanganate_index_hj1445_2026",
+    "priority": 40,
+    "enabled": true
+  },
+  {
+    "alias": "烟气黑度",
+    "normalized_alias": "烟气黑度",
+    "factor": "烟气黑度",
+    "card_id": "gas_smoke_blackness_hj1287_2023",
+    "priority": 10,
+    "enabled": true
+  },
+  {
+    "alias": "林格曼黑度",
+    "normalized_alias": "林格曼黑度",
+    "factor": "烟气黑度",
+    "card_id": "gas_smoke_blackness_hj1287_2023",
+    "priority": 20,
+    "enabled": true
+  },
+  {
+    "alias": "黑度",
+    "normalized_alias": "黑度",
+    "factor": "烟气黑度",
+    "card_id": "gas_smoke_blackness_hj1287_2023",
+    "priority": 50,
+    "enabled": true
+  },
+  {
+    "alias": "烟尘黑度",
+    "normalized_alias": "烟尘黑度",
+    "factor": "烟气黑度",
+    "card_id": "gas_smoke_blackness_hj1287_2023",
+    "priority": 60,
+    "enabled": true
+  },
+  {
+    "alias": "总烃",
+    "normalized_alias": "总烃",
+    "factor": "总烃、甲烷和非甲烷总烃",
+    "card_id": "gas_thc_methane_nmhc_hj1332_2023",
+    "priority": 10,
+    "enabled": true
+  },
+  {
+    "alias": "THC",
+    "normalized_alias": "thc",
+    "factor": "总烃、甲烷和非甲烷总烃",
+    "card_id": "gas_thc_methane_nmhc_hj1332_2023",
+    "priority": 20,
+    "enabled": true
+  },
+  {
+    "alias": "甲烷",
+    "normalized_alias": "甲烷",
+    "factor": "总烃、甲烷和非甲烷总烃",
+    "card_id": "gas_thc_methane_nmhc_hj1332_2023",
+    "priority": 30,
+    "enabled": true
+  },
+  {
+    "alias": "CH4",
+    "normalized_alias": "ch4",
+    "factor": "总烃、甲烷和非甲烷总烃",
+    "card_id": "gas_thc_methane_nmhc_hj1332_2023",
+    "priority": 40,
+    "enabled": true
+  },
+  {
+    "alias": "非甲烷总烃",
+    "normalized_alias": "非甲烷总烃",
+    "factor": "总烃、甲烷和非甲烷总烃",
+    "card_id": "gas_thc_methane_nmhc_hj1332_2023",
+    "priority": 50,
+    "enabled": true
+  },
+  {
+    "alias": "NMHC",
+    "normalized_alias": "nmhc",
+    "factor": "总烃、甲烷和非甲烷总烃",
+    "card_id": "gas_thc_methane_nmhc_hj1332_2023",
+    "priority": 60,
+    "enabled": true
+  },
+  {
+    "alias": "非甲烷烃",
+    "normalized_alias": "非甲烷烃",
+    "factor": "总烃、甲烷和非甲烷总烃",
+    "card_id": "gas_thc_methane_nmhc_hj1332_2023",
+    "priority": 70,
+    "enabled": true
+  }
+]
