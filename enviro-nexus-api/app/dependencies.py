@@ -1,15 +1,32 @@
 from collections.abc import AsyncGenerator
 
 import httpx
-from fastapi import Depends, Request
+from fastapi import Depends, Header, Request
 
 from app.clients.knowledge_client import KnowledgeClient
+from app.core.exceptions import MissingUserIdError
 from app.config.settings import Settings, get_settings
 from app.llm.minimax_chat import get_chat_model, get_summarizer_model
 from app.services.chat_query_service import ChatQueryService
 from app.services.factor_service import FactorService
 from app.services.health_service import HealthService
+from app.services.session_service import SessionService
 from app.services.session_store import SessionStore
+
+USER_ID_HEADER = "X-User-Id"
+
+
+def get_user_id(
+    x_user_id: str = Header(
+        ...,
+        alias="X-User-Id",
+        description="用户标识，用于会话归属与隔离（POC / 内网）",
+    ),
+) -> str:
+    stripped = x_user_id.strip()
+    if not stripped:
+        raise MissingUserIdError()
+    return stripped
 
 
 async def get_http_client() -> AsyncGenerator[httpx.AsyncClient, None]:
@@ -36,6 +53,14 @@ def get_factor_service(knowledge_client: KnowledgeClient) -> FactorService:
 def get_health_service(knowledge_client: KnowledgeClient) -> HealthService:
     """提供 HealthService 实例。"""
     return HealthService(knowledge_client=knowledge_client)
+
+
+def get_session_service(session_store: SessionStore) -> SessionService:
+    return SessionService(session_store)
+
+
+def get_session_service_dep(request: Request) -> SessionService:
+    return get_session_service(request.app.state.session_store)
 
 
 def get_chat_query_service(

@@ -74,12 +74,65 @@ docker compose up -d
 | `MINIMAX_MODEL` | `MiniMax-M3` | 模型名称 |
 | `SESSION_STORE` | `memory` | 会话存储：`memory` 或 `redis` |
 | `REDIS_URL` | `redis://localhost:6379/0` | Redis 地址（`SESSION_STORE=redis` 时） |
-| `SESSION_TTL_SECONDS` | `86400` | 会话过期时间（秒） |
+| `SESSION_TTL_SECONDS` | `86400` | **已废弃**（保留兼容，运行时忽略） |
 | `MAX_RECENT_TURNS` | `6` | 上下文保留最近消息条数 |
 
-### 因子查询（破坏性变更）
+## 多轮会话 API
 
-`POST /api/v1/factors/query` 请求可增加 `session_id`；响应 `data` 使用 `reply`、`sources`、`session_id`，不再返回结构化 `answer`。详见 `docs/superpowers/specs/2026-06-02-chat-query-minimax-design.md`。
+所有会话端点及 `POST /api/v1/factors/query` 均要求请求头 **`X-User-Id`**（用户归属，POC/内网场景）。缺失时返回 HTTP 422，`code=VALIDATION_ERROR`。
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| `POST` | `/api/v1/sessions` | 创建空会话（「新对话」），返回 `session_id` 与空消息列表 |
+| `GET` | `/api/v1/sessions` | 分页列出当前用户会话（`page`、`page_size`） |
+| `GET` | `/api/v1/sessions/{session_id}` | 获取会话详情（含完整消息与 assistant 的 `sources`） |
+| `DELETE` | `/api/v1/sessions/{session_id}` | 删除会话 |
+| `POST` | `/api/v1/factors/query` | 在已有会话内查询；请求体 `session_id` + `query`，返回 `reply` 与 `sources` |
+| `POST` | `/api/v1/factors/query/stream` | 同上请求体；SSE 流式返回（`meta` → `token` → `done`） |
+
+设计细节见 `docs/superpowers/specs/2026-06-03-multi-turn-session-design.md`。
+
+### 典型联调流程
+
+1. **新对话**：`POST /api/v1/sessions`（带 `X-User-Id`）→ 从响应 `data.session_id` 取得会话 ID。
+2. **发送消息**：`POST /api/v1/factors/query`，请求体包含 `session_id` 与 `query`（同样带 `X-User-Id`）。
+3. **追问**：同一 `session_id` 重复调用 `POST /api/v1/factors/query`。
+4. **历史列表**：`GET /api/v1/sessions`。
+5. **打开历史**：`GET /api/v1/sessions/{session_id}`。
+6. **删除**：`DELETE /api/v1/sessions/{session_id}`。
+
+示例（需先启动服务）：
+
+```bash
+# 创建会话
+curl -s -X POST http://localhost:8080/api/v1/sessions \
+  -H "X-User-Id: user-001" -H "Content-Type: application/json"
+
+# 在会话内查询
+curl -s -X POST http://localhost:8080/api/v1/factors/query \
+  -H "X-User-Id: user-001" -H "Content-Type: application/json" \
+  -d '{"session_id":"<上一步返回的 session_id>","query":"COD 怎么测？"}'
+```
+
+```bash
+# 流式查询（SSE）
+curl -N -X POST http://localhost:8080/api/v1/factors/query/stream \
+  -H "X-User-Id: user-001" -H "Content-Type: application/json" \
+  -d '{"session_id":"<session_id>","query":"COD 怎么测？"}'
+```
+
+设计细节见 `docs/superpowers/specs/2026-06-03-stream-query-design.md`。
+
+### 破坏性变更（多轮会话）
+
+相对早期「可选 `session_id`、服务端懒创建会话」的行为，当前版本要求：
+
+- **`session_id` 必填**：`POST /api/v1/factors/query` 请求体必须包含已存在的 `session_id`（须先 `POST /api/v1/sessions` 创建）。
+- **无懒创建**：服务端不再在缺少或无效会话时自动新建会话。
+- **`X-User-Id` 必填**：会话 CRUD 与因子查询均需该请求头；会话仅归属对应用户。
+- **会话无 TTL**：会话持久保留直至 `DELETE`；`SESSION_TTL_SECONDS` 环境变量已废弃，配置后会被忽略。
+
+因子查询响应 `data` 使用 `reply`、`sources`、`session_id`，不再返回结构化 `answer`。更早的 MiniMax 查询设计见 `docs/superpowers/specs/2026-06-02-chat-query-minimax-design.md`。
 
 复制 `.env.example` 为 `.env` 并按需修改：
 

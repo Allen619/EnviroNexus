@@ -37,3 +37,20 @@ def build_knowledge_block(payload: KnowledgeFactorQueryPayload) -> str:
                 f"{evidence.summary} / {evidence.field_path}"
             )
     return "\n".join(lines)
+
+
+TITLE_SYSTEM_PROMPT = (
+    "你是会话标题助手。根据首轮问答生成一条简体中文标题，不超过20字，"
+    "不要引号，不要句号，概括用户咨询主题。"
+)
+
+
+def build_title_input(user_msg: str, assistant_msg: str) -> str:
+    return f"用户：{user_msg}\n助手：{assistant_msg}"
+
+
+def fallback_title(first_user_message: str) -> str:
+    text = first_user_message.strip()
+    if len(text) <= 30:
+        return text
+    return text[:29] + "…"

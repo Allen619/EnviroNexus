@@ -6,6 +6,7 @@ from app.config.settings import get_settings
 from app.main import app
 from app.services.session_store import build_session_store
 
+DEFAULT_USER_HEADERS = {"X-User-Id": "test-user"}
 
 @pytest.fixture(autouse=True)
 def init_session_store():
@@ -13,7 +14,6 @@ def init_session_store():
     settings = get_settings()
     app.state.session_store = build_session_store(
         settings.session_store,
-        settings.session_ttl_seconds,
         settings.redis_url,
     )
     yield

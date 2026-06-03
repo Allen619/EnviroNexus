@@ -15,6 +15,9 @@ from app.schemas.factor_query import (
     MethodCardResponse,
 )
 
+USER_HEADERS = {"X-User-Id": "test-user"}
+DEFAULT_QUERY_BODY = {"query": "COD 怎么测？", "session_id": "test-session-id"}
+
 
 @pytest.mark.asyncio
 async def test_factor_query_matched(client):
@@ -48,7 +51,8 @@ async def test_factor_query_matched(client):
     ):
         response = await client.post(
             "/api/v1/factors/query",
-            json={"query": "COD 怎么测？"},
+            headers=USER_HEADERS,
+            json=DEFAULT_QUERY_BODY,
         )
 
     assert response.status_code == 200
@@ -86,7 +90,8 @@ async def test_factor_query_not_matched(client):
     ):
         response = await client.post(
             "/api/v1/factors/query",
-            json={"query": "不存在的因子"},
+            headers=USER_HEADERS,
+            json={"query": "不存在的因子", "session_id": "test-session-id"},
         )
 
     assert response.status_code == 200
@@ -100,7 +105,55 @@ async def test_factor_query_not_matched(client):
 @pytest.mark.asyncio
 async def test_factor_query_validation_422(client):
     """测试因子查询 - 空 query 返回 422。"""
-    response = await client.post("/api/v1/factors/query", json={"query": ""})
+    response = await client.post(
+        "/api/v1/factors/query",
+        headers=USER_HEADERS,
+        json={"query": "", "session_id": "test-session-id"},
+    )
+
+    assert response.status_code == 422
+    data = response.json()
+    assert data["success"] is False
+    assert data["code"] == "VALIDATION_ERROR"
+
+
+@pytest.mark.asyncio
+async def test_factor_query_missing_user_id_422(client):
+    """测试因子查询 - 缺少 X-User-Id 返回 422。"""
+    response = await client.post(
+        "/api/v1/factors/query",
+        json=DEFAULT_QUERY_BODY,
+    )
+
+    assert response.status_code == 422
+    data = response.json()
+    assert data["success"] is False
+    assert data["code"] == "VALIDATION_ERROR"
+
+
+@pytest.mark.asyncio
+async def test_factor_query_blank_query_422(client):
+    """测试因子查询 - 空白 query 返回 422。"""
+    response = await client.post(
+        "/api/v1/factors/query",
+        headers=USER_HEADERS,
+        json={"query": "   ", "session_id": "s1"},
+    )
+
+    assert response.status_code == 422
+    data = response.json()
+    assert data["success"] is False
+    assert data["code"] == "VALIDATION_ERROR"
+
+
+@pytest.mark.asyncio
+async def test_factor_query_missing_session_id_422(client):
+    """测试因子查询 - 缺少 session_id 返回 422。"""
+    response = await client.post(
+        "/api/v1/factors/query",
+        headers=USER_HEADERS,
+        json={"query": "COD"},
+    )
 
     assert response.status_code == 422
     data = response.json()
@@ -118,7 +171,8 @@ async def test_factor_query_knowledge_service_error_502(client):
     ):
         response = await client.post(
             "/api/v1/factors/query",
-            json={"query": "COD"},
+            headers=USER_HEADERS,
+            json={"query": "COD", "session_id": "test-session-id"},
         )
 
     assert response.status_code == 502
@@ -136,7 +190,8 @@ async def test_factor_query_llm_service_error_502(client):
     ):
         response = await client.post(
             "/api/v1/factors/query",
-            json={"query": "COD"},
+            headers=USER_HEADERS,
+            json={"query": "COD", "session_id": "test-session-id"},
         )
 
     assert response.status_code == 502
@@ -147,6 +202,8 @@ async def test_factor_query_llm_service_error_502(client):
 @pytest.mark.asyncio
 async def test_factor_query_upstream_timeout_502(client):
     """测试因子查询 - 上游超时经 Service 转为 502。"""
+    created = await client.post("/api/v1/sessions", headers=USER_HEADERS)
+    session_id = created.json()["data"]["session_id"]
     with patch(
         "app.clients.knowledge_client.KnowledgeClient.query_factor",
         new_callable=AsyncMock,
@@ -154,7 +211,8 @@ async def test_factor_query_upstream_timeout_502(client):
     ):
         response = await client.post(
             "/api/v1/factors/query",
-            json={"query": "COD"},
+            headers=USER_HEADERS,
+            json={"query": "COD", "session_id": session_id},
         )
 
     assert response.status_code == 502
@@ -164,25 +222,33 @@ async def test_factor_query_upstream_timeout_502(client):
 
 @pytest.mark.asyncio
 async def test_factor_query_multi_turn_session(client):
-    """多轮请求同一 session_id 可续聊（memory store 跨请求）。"""
+    """多轮请求同一 session_id 可续聊。"""
     from app.schemas.knowledge import KnowledgeFactorQueryPayload
 
+    headers = {"X-User-Id": "multi-turn-user"}
+    created = await client.post("/api/v1/sessions", headers=headers)
+    session_id = created.json()["data"]["session_id"]
     payload = KnowledgeFactorQueryPayload(matched=False)
     with patch(
         "app.clients.knowledge_client.KnowledgeClient.query_factor",
         new_callable=AsyncMock,
         return_value=payload,
     ):
-        first = await client.post("/api/v1/factors/query", json={"query": "第一轮"})
+        first = await client.post(
+            "/api/v1/factors/query",
+            headers=headers,
+            json={"query": "第一轮", "session_id": session_id},
+        )
         second = await client.post(
             "/api/v1/factors/query",
-            json={"query": "第二轮", "session_id": first.json()["data"]["session_id"]},
+            headers=headers,
+            json={"query": "第二轮", "session_id": session_id},
         )
 
     assert first.status_code == 200
     assert second.status_code == 200
-    assert second.json()["data"]["session_id"] == first.json()["data"]["session_id"]
-    assert "会话已过期" not in " ".join(second.json()["data"].get("warnings", []))
+    assert second.json()["data"]["session_id"] == session_id
+    assert second.json()["data"].get("warnings", []) == []
 
 
 @pytest.mark.asyncio

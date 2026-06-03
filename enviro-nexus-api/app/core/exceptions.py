@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 
 from app.schemas.common import ErrorDetail, build_error_response
@@ -28,6 +29,24 @@ class LLMServiceError(AppError):
         super().__init__(message=message, status_code=502, code="LLM_SERVICE_ERROR")
 
 
+class SessionNotFoundError(AppError):
+    """会话不存在或不属于当前用户。"""
+
+    def __init__(self, message: str = "会话不存在"):
+        super().__init__(message=message, status_code=404, code="SESSION_NOT_FOUND")
+
+
+class MissingUserIdError(AppError):
+    """缺少 X-User-Id 请求头。"""
+
+    def __init__(self) -> None:
+        super().__init__(
+            message="缺少用户标识，请提供 X-User-Id 请求头",
+            status_code=422,
+            code="VALIDATION_ERROR",
+        )
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     """注册全局异常处理器。"""
 
@@ -47,5 +66,5 @@ def register_exception_handlers(app: FastAPI) -> None:
             code="VALIDATION_ERROR",
             message="请求参数校验失败",
             status_code=422,
-            error=ErrorDetail(details=exc.errors()),
+            error=ErrorDetail(details=jsonable_encoder(exc.errors())),
         )

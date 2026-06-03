@@ -19,7 +19,6 @@ async def lifespan(app: FastAPI):
     settings = get_settings()
     app.state.session_store = build_session_store(
         settings.session_store,
-        settings.session_ttl_seconds,
         settings.redis_url,
     )
     logger.info(
@@ -44,6 +43,25 @@ def create_app() -> FastAPI:
         version=settings.app_version,
         debug=settings.debug,
         lifespan=lifespan,
+        description=(
+            "环检智枢业务 API。支持多轮会话管理（`/api/v1/sessions`）"
+            "与会话内因子查询（`/api/v1/factors/query`）。"
+            "会话相关接口需请求头 `X-User-Id`。"
+        ),
+        openapi_tags=[
+            {
+                "name": "sessions",
+                "description": "多轮会话管理：创建、列表、详情、删除",
+            },
+            {
+                "name": "factors",
+                "description": "因子查询与方法卡详情",
+            },
+            {
+                "name": "health",
+                "description": "服务健康检查",
+            },
+        ],
     )
 
     # 注册中间件

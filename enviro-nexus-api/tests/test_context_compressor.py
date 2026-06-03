@@ -17,6 +17,7 @@ async def test_compress_moves_old_messages_into_summary():
     )
     record = SessionRecord(
         session_id="s1",
+        user_id="test-user",
         created_at=datetime.now(timezone.utc),
         updated_at=datetime.now(timezone.utc),
         summary="",
@@ -42,6 +43,7 @@ async def test_compress_when_over_char_threshold_with_few_messages():
     long_text = "x" * 40
     record = SessionRecord(
         session_id="s2",
+        user_id="test-user",
         created_at=datetime.now(timezone.utc),
         updated_at=datetime.now(timezone.utc),
         summary="",

@@ -48,8 +48,9 @@ class ErrorResponse(ApiResponse[None]):
 
 
 COMMON_RESPONSES: dict[int, dict] = {
+    404: {"model": ErrorResponse, "description": "资源不存在"},
     422: {"model": ErrorResponse, "description": "请求参数校验失败"},
-    502: {"model": ErrorResponse, "description": "知识服务调用失败"},
+    502: {"model": ErrorResponse, "description": "上游服务调用失败"},
 }
 
 

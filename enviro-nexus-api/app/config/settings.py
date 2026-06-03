@@ -1,6 +1,9 @@
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+ENV_FILE = Path(__file__).resolve().parents[2] / ".env"
 
 
 class Settings(BaseSettings):
@@ -19,6 +22,7 @@ class Settings(BaseSettings):
 
     # MiniMax / LLM
     minimax_api_key: str = ""
+    openai_api_key: str = ""
     minimax_base_url: str = "https://api.minimax.chat/v1"
     minimax_model: str = "MiniMax-M3"
     minimax_timeout: float = 60.0
@@ -31,7 +35,7 @@ class Settings(BaseSettings):
     compress_char_threshold: int = 6000
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=ENV_FILE,
         env_file_encoding="utf-8",
     )
 
