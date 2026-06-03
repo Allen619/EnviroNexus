@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: enviro-nexus-knowledge-postgres
+    environment:
+      POSTGRES_DB: enviro_nexus_knowledge
+      POSTGRES_USER: enviro_nexus
+      POSTGRES_PASSWORD: enviro_nexus_dev
+    ports:
+      - "15432:5432"
+    volumes:
+      - enviro_nexus_knowledge_pgdata:/var/lib/postgresql/data
+      - ./data/backups:/backups
+
+volumes:
+  enviro_nexus_knowledge_pgdata:

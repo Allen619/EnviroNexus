@@ -1,0 +1,192 @@
+{
+  "schema_version": "method_card.v0.1",
+  "card_id": "gas_thc_methane_nmhc_hj1332_2023",
+  "card_version": 1,
+  "identity": {
+    "category": "固定污染源废气",
+    "factor": "总烃、甲烷和非甲烷总烃",
+    "factors": [
+      {
+        "name": "总烃",
+        "aliases": ["总烃", "THC"]
+      },
+      {
+        "name": "甲烷",
+        "aliases": ["甲烷", "CH4", "CH₄"]
+      },
+      {
+        "name": "非甲烷总烃",
+        "aliases": ["非甲烷总烃", "NMHC", "非甲烷烃"]
+      }
+    ],
+    "aliases": ["总烃", "THC", "甲烷", "CH4", "CH₄", "非甲烷总烃", "NMHC", "非甲烷烃"],
+    "standard_code": "HJ 1332-2023",
+    "standard_name": "固定污染源废气 总烃、甲烷和非甲烷总烃的测定 便携式气相色谱-氢火焰离子化检测器法",
+    "method_name": "便携式气相色谱-氢火焰离子化检测器法"
+  },
+  "applicability": {
+    "scope_summary": "适用于固定污染源有组织排放废气中总烃、甲烷和非甲烷总烃的测定。",
+    "sample_types": ["固定污染源有组织排放废气"],
+    "exclusions": [],
+    "evidence_ids": ["ev_scope"]
+  },
+  "measurement": {
+    "principle": "连续抽取样品导入仪器，经总烃柱和甲烷柱后进入氢火焰离子化检测器，测定总烃和甲烷，两者之差为非甲烷总烃。",
+    "instrument": "便携式气相色谱-氢火焰离子化检测仪、气体钢瓶、采样管路、过滤器和气袋",
+    "unit": "mg/m3",
+    "range": {
+      "lower": "0.8",
+      "upper": null,
+      "unit": "mg/m3"
+    },
+    "evidence_ids": ["ev_principle", "ev_instrument"]
+  },
+  "requirements": [
+    {
+      "requirement_id": "req_interference",
+      "type": "interference",
+      "title": "干扰和消除",
+      "content": "颗粒物、水分冷凝和氧气会影响测定，可通过过滤、全程加热伴热采样、扣减氧峰或响应值等方式消除或减少干扰。",
+      "evidence_ids": ["ev_interference"]
+    },
+    {
+      "requirement_id": "req_sample",
+      "type": "sample_collection",
+      "title": "样品采集",
+      "content": "按固定污染源采样相关规范确定采样位置、采样点及频次，并采集样品。",
+      "evidence_ids": ["ev_sample"]
+    },
+    {
+      "requirement_id": "req_calibration",
+      "type": "analysis_step",
+      "title": "测试准备和仪器核查",
+      "content": "连接仪器并预热，选择合适校准曲线或量程，测定前进行零点校准和量程校准，示值误差应满足标准要求。",
+      "evidence_ids": ["ev_preparation", "ev_calibration"]
+    },
+    {
+      "requirement_id": "req_analysis",
+      "type": "analysis_step",
+      "title": "样品测定",
+      "content": "将采样管前端置于排气筒中心附近，采样流量波动控制在 ±10% 以内，采样管和伴热管温度控制在 120 ℃±5 ℃。",
+      "evidence_ids": ["ev_analysis"]
+    },
+    {
+      "requirement_id": "req_result",
+      "type": "result_expression",
+      "title": "结果计算与表示",
+      "content": "总烃、甲烷和非甲烷总烃以标准状态干基样品中的质量浓度表示；非甲烷总烃结果为非负值。",
+      "evidence_ids": ["ev_result"]
+    }
+  ],
+  "qa_qc": [
+    {
+      "item_id": "qa_instrument",
+      "title": "仪器漂移、示值误差和系统偏差",
+      "content": "仪器使用期间应核查总烃和甲烷零点漂移、量程漂移；样品测定前后应核查示值误差和系统偏差，不满足要求时结果无效。",
+      "evidence_ids": ["ev_qa"]
+    }
+  ],
+  "answer_template": {
+    "short_answer": "固定污染源废气中总烃、甲烷和非甲烷总烃可采用 HJ 1332-2023《固定污染源废气 总烃、甲烷和非甲烷总烃的测定 便携式气相色谱-氢火焰离子化检测器法》测定。",
+    "evidence_ids": ["ev_scope", "ev_principle"]
+  },
+  "source_document": {
+    "doc_id": "doc_hj1332_2023",
+    "standard_code": "HJ 1332-2023",
+    "title": "固定污染源废气 总烃、甲烷和非甲烷总烃的测定 便携式气相色谱-氢火焰离子化检测器法"
+  },
+  "evidence_refs": [
+    {
+      "evidence_id": "ev_scope",
+      "source_title": "HJ 1332-2023",
+      "section": "1 适用范围",
+      "page": 1,
+      "summary": "标准适用于固定污染源有组织排放废气中总烃、甲烷和非甲烷总烃测定，总烃和甲烷测定下限为 0.8 mg/m3。"
+    },
+    {
+      "evidence_id": "ev_principle",
+      "source_title": "HJ 1332-2023",
+      "section": "4 方法原理",
+      "page": 1,
+      "summary": "样品经总烃柱和甲烷柱进入氢火焰离子化检测器，测定总烃和甲烷，两者之差为非甲烷总烃。"
+    },
+    {
+      "evidence_id": "ev_interference",
+      "source_title": "HJ 1332-2023",
+      "section": "5 干扰和消除",
+      "page": 1,
+      "summary": "颗粒物、水分冷凝和氧气会影响测定，可通过过滤、伴热采样、扣减氧峰或响应值等措施控制。"
+    },
+    {
+      "evidence_id": "ev_instrument",
+      "source_title": "HJ 1332-2023",
+      "section": "7 仪器和设备",
+      "page": 2,
+      "summary": "使用便携式气相色谱-氢火焰离子化检测仪，仪器应符合结构组成、性能指标和自动记录等要求。"
+    },
+    {
+      "evidence_id": "ev_sample",
+      "source_title": "HJ 1332-2023",
+      "section": "8 样品",
+      "page": 2,
+      "summary": "按 GB/T 16157、HJ/T 373、HJ/T 397 等规定确定采样位置、采样点和频次并采集样品。"
+    },
+    {
+      "evidence_id": "ev_preparation",
+      "source_title": "HJ 1332-2023",
+      "section": "9.1 测试准备",
+      "page": 2,
+      "summary": "连接仪器并预热至工作状态，预估污染物浓度后选择合适的校准曲线或校准量程。"
+    },
+    {
+      "evidence_id": "ev_calibration",
+      "source_title": "HJ 1332-2023",
+      "section": "9.2 仪器核查",
+      "page": 2,
+      "summary": "测定前进行零点校准和量程校准，通入标准气体后示值误差应满足标准要求。"
+    },
+    {
+      "evidence_id": "ev_analysis",
+      "source_title": "HJ 1332-2023",
+      "section": "9.3 样品测定",
+      "page": 3,
+      "summary": "采样管置于排气筒中心附近，采样流量波动控制在 ±10% 以内，采样管和伴热管温度控制在 120 ℃±5 ℃。"
+    },
+    {
+      "evidence_id": "ev_result",
+      "source_title": "HJ 1332-2023",
+      "section": "10 结果计算与表示",
+      "page": 3,
+      "summary": "总烃、甲烷和非甲烷总烃以标准状态干基样品中的质量浓度表示，非甲烷总烃结果应为非负值。"
+    },
+    {
+      "evidence_id": "ev_qa",
+      "source_title": "HJ 1332-2023",
+      "section": "12 质量保证和质量控制",
+      "page": 4,
+      "summary": "仪器使用期间应核查零点漂移和量程漂移；样品测定前后应核查示值误差和系统偏差。"
+    },
+    {
+      "evidence_id": "ev_note",
+      "source_title": "HJ 1332-2023",
+      "section": "13 注意事项",
+      "page": 5,
+      "summary": "仪器应在适当环境温度、湿度、防爆等条件下使用，测定前检查采气管路并清洁颗粒物过滤装置。"
+    }
+  ],
+  "governance": {
+    "review_status": "approved",
+    "answer_visibility": "enabled"
+  },
+  "change_log": [
+    {
+      "version": 1,
+      "date": "2026-06-03",
+      "description": "Day 1.5 基于 markdown 人工整理总烃、甲烷和非甲烷总烃 MethodCard。"
+    }
+  ],
+  "extensions": {
+    "manual_extract_source": "files/poc-files/HJ 1332-2023 固定污染源废气 总烃、甲烷和非甲烷总烃的测定 便携式气相色谱-氢火焰离子化检测器法.md",
+    "needs_pdf_check": true
+  }
+}

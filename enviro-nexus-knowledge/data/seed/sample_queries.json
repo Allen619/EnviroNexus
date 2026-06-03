@@ -1,0 +1,42 @@
+[
+  {
+    "query": "pH 怎么测？",
+    "expected_card_id": "water_ph_hj1147_2020",
+    "expected_matched": true
+  },
+  {
+    "query": "水样酸碱度用什么标准？",
+    "expected_card_id": "water_ph_hj1147_2020",
+    "expected_matched": true
+  },
+  {
+    "query": "PH值检测方法",
+    "expected_card_id": "water_ph_hj1147_2020",
+    "expected_matched": true
+  },
+  {
+    "query": "色度怎么测？",
+    "expected_card_id": "water_colority_hj1182_2021",
+    "expected_matched": true
+  },
+  {
+    "query": "CODMn 怎么测？",
+    "expected_card_id": "water_permanganate_index_hj1445_2026",
+    "expected_matched": true
+  },
+  {
+    "query": "烟气黑度怎么测？",
+    "expected_card_id": "gas_smoke_blackness_hj1287_2023",
+    "expected_matched": true
+  },
+  {
+    "query": "非甲烷总烃怎么测？",
+    "expected_card_id": "gas_thc_methane_nmhc_hj1332_2023",
+    "expected_matched": true
+  },
+  {
+    "query": "COD 怎么测？",
+    "expected_card_id": null,
+    "expected_matched": false
+  }
+]

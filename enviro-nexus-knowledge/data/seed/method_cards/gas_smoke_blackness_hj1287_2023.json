@@ -1,0 +1,163 @@
+{
+  "schema_version": "method_card.v0.1",
+  "card_id": "gas_smoke_blackness_hj1287_2023",
+  "card_version": 1,
+  "identity": {
+    "category": "固定污染源废气",
+    "factor": "烟气黑度",
+    "factors": [
+      {
+        "name": "烟气黑度",
+        "aliases": ["烟气黑度", "林格曼黑度", "黑度", "烟尘黑度"]
+      }
+    ],
+    "aliases": ["烟气黑度", "林格曼黑度", "黑度", "烟尘黑度"],
+    "standard_code": "HJ 1287-2023",
+    "standard_name": "固定污染源废气 烟气黑度的测定 林格曼望远镜法",
+    "method_name": "林格曼望远镜法"
+  },
+  "applicability": {
+    "scope_summary": "适用于固定污染源排放的灰色或黑色烟气在排放口处黑度的测定，不适用于其他颜色烟气。",
+    "sample_types": ["固定污染源废气"],
+    "exclusions": ["其他颜色烟气"],
+    "evidence_ids": ["ev_scope"]
+  },
+  "measurement": {
+    "principle": "在适当位置用林格曼望远镜观测烟羽，将烟羽黑度与内置林格曼黑度图比较，确定烟气黑度等级。",
+    "instrument": "林格曼望远镜、望远镜支架、计时器、风向和风速测定仪",
+    "unit": "林格曼黑度级",
+    "range": {
+      "lower": "0",
+      "upper": "5",
+      "unit": "级"
+    },
+    "evidence_ids": ["ev_principle", "ev_instrument"]
+  },
+  "requirements": [
+    {
+      "requirement_id": "req_condition",
+      "type": "field_condition",
+      "title": "观测位置和条件",
+      "content": "观测应在光照充足的白天进行，雨雪、雾、严重阴霾、风速大于 4.5 m/s 等条件下不应观测。",
+      "evidence_ids": ["ev_condition"]
+    },
+    {
+      "requirement_id": "req_observation",
+      "type": "analysis_step",
+      "title": "观测步骤",
+      "content": "选定位置后将望远镜对准烟囱出口烟羽，与林格曼黑度图比较；通常连续观测 30 min 并按频次记录。",
+      "evidence_ids": ["ev_observation"]
+    },
+    {
+      "requirement_id": "req_record",
+      "type": "other",
+      "title": "现场观测记录",
+      "content": "现场记录应包括观测日期、污染源信息、仪器型号和编号、依据、观测点位置、条件、时间和结果等。",
+      "evidence_ids": ["ev_record"]
+    },
+    {
+      "requirement_id": "req_result",
+      "type": "result_expression",
+      "title": "结果计算与表示",
+      "content": "烟气黑度按 30 min 内出现累计时间超过 2 min 的最大林格曼黑度级计；出现 5 级时直接按 5 级计。",
+      "evidence_ids": ["ev_result"]
+    }
+  ],
+  "qa_qc": [
+    {
+      "item_id": "qa_observer_instrument",
+      "title": "人员与望远镜核查",
+      "content": "观测人员应经过培训，视力和色觉正常；望远镜首次使用或维修后应核查林格曼黑度图误差，要求不超过 0.2 级。",
+      "evidence_ids": ["ev_qa"]
+    }
+  ],
+  "answer_template": {
+    "short_answer": "固定污染源废气烟气黑度可采用 HJ 1287-2023《固定污染源废气 烟气黑度的测定 林格曼望远镜法》测定。",
+    "evidence_ids": ["ev_scope", "ev_principle"]
+  },
+  "source_document": {
+    "doc_id": "doc_hj1287_2023",
+    "standard_code": "HJ 1287-2023",
+    "title": "固定污染源废气 烟气黑度的测定 林格曼望远镜法"
+  },
+  "evidence_refs": [
+    {
+      "evidence_id": "ev_scope",
+      "source_title": "HJ 1287-2023",
+      "section": "1 适用范围",
+      "page": 1,
+      "summary": "标准适用于固定污染源排放的灰色或黑色烟气在排放口处黑度的测定，不适用于其他颜色烟气。"
+    },
+    {
+      "evidence_id": "ev_principle",
+      "source_title": "HJ 1287-2023",
+      "section": "4 方法原理",
+      "page": 1,
+      "summary": "使用林格曼望远镜观测烟羽，并与内置林格曼黑度图比较确定烟气黑度等级。"
+    },
+    {
+      "evidence_id": "ev_instrument",
+      "source_title": "HJ 1287-2023",
+      "section": "5 仪器和设备",
+      "page": 1,
+      "summary": "使用林格曼望远镜、支架、计时器，以及风向和风速测定仪等设备。"
+    },
+    {
+      "evidence_id": "ev_condition",
+      "source_title": "HJ 1287-2023",
+      "section": "6.1 观测位置和条件",
+      "page": 2,
+      "summary": "观测应在光照充足的白天进行，雨雪、雾、严重阴霾、风速大于 4.5 m/s 等不适宜条件下不应观测。"
+    },
+    {
+      "evidence_id": "ev_observation",
+      "source_title": "HJ 1287-2023",
+      "section": "6.2 观测步骤",
+      "page": 2,
+      "summary": "将望远镜对准烟囱出口烟羽，与林格曼黑度图比较，通常连续观测 30 min 并按规定频次记录。"
+    },
+    {
+      "evidence_id": "ev_record",
+      "source_title": "HJ 1287-2023",
+      "section": "7 现场观测记录",
+      "page": 3,
+      "summary": "记录内容包括观测日期、污染源信息、仪器型号及编号、观测方法依据、观测点位置、条件、时间和结果等。"
+    },
+    {
+      "evidence_id": "ev_result",
+      "source_title": "HJ 1287-2023",
+      "section": "8 结果计算与表示",
+      "page": 3,
+      "summary": "统计每一黑度级别出现的累计次数和时间，按累计时间超过 2 min 的最大林格曼黑度级计；出现 5 级时直接计为 5 级。"
+    },
+    {
+      "evidence_id": "ev_qa",
+      "source_title": "HJ 1287-2023",
+      "section": "10 质量保证和质量控制",
+      "page": 4,
+      "summary": "观测人员应经培训且视力、色觉正常；望远镜首次使用或维修后应核查黑度图误差不超过 0.2 级。"
+    },
+    {
+      "evidence_id": "ev_note",
+      "source_title": "HJ 1287-2023",
+      "section": "11 注意事项",
+      "page": 4,
+      "summary": "观测时应避免黑度图与烟羽重叠，注意冷凝水汽影响，并防止视觉疲劳。"
+    }
+  ],
+  "governance": {
+    "review_status": "approved",
+    "answer_visibility": "enabled"
+  },
+  "change_log": [
+    {
+      "version": 1,
+      "date": "2026-06-03",
+      "description": "Day 1.5 基于 markdown 人工整理烟气黑度 MethodCard。"
+    }
+  ],
+  "extensions": {
+    "manual_extract_source": "files/poc-files/HJ 1287-2023 固定污染源废气 烟气黑度的测定 林格曼望远镜法.md",
+    "needs_pdf_check": true
+  }
+}
