@@ -112,7 +112,7 @@ async def test_query_stream_emits_meta_token_done():
     assert loaded is not None
     assert len(loaded.messages) == 2
     assert loaded.messages[1].content == "COD测定"
-    knowledge.query_factor.assert_awaited_once_with("COD怎么测", "化学需氧量")
+    knowledge.query_factor.assert_awaited_once_with("COD怎么测")
 
 
 @pytest.mark.asyncio

@@ -152,20 +152,12 @@ class ChatQueryService:
         fallback_factor_name: str | None,
     ) -> QueryRewriteDecision:
         if self._rewrite is None:
-            if fallback_factor_name:
-                return QueryRewriteDecision(
-                    should_query_knowledge=True,
-                    known_supported_factor=True,
-                    rewritten_query=query,
-                    factor_name=fallback_factor_name,
-                    confidence=1,
-                )
             return QueryRewriteDecision(
-                should_query_knowledge=False,
-                known_supported_factor=False,
-                rewritten_query="",
-                factor_name=None,
-                confidence=0,
+                should_query_knowledge=True,
+                known_supported_factor=bool(fallback_factor_name),
+                rewritten_query=query,
+                factor_name=fallback_factor_name,
+                confidence=1 if fallback_factor_name else 0,
             )
 
         try:
@@ -206,7 +198,7 @@ class ChatQueryService:
         rewritten_query = rewrite.rewritten_query.strip() or query
         rewritten_factor = rewrite.factor_name.strip() if rewrite.factor_name else None
 
-        if not rewrite.should_query_knowledge or not rewritten_factor:
+        if not rewrite.should_query_knowledge:
             return TurnContext(
                 record=record,
                 payload=KnowledgeFactorQueryPayload(
@@ -221,7 +213,7 @@ class ChatQueryService:
             )
 
         try:
-            payload = await self._knowledge.query_factor(rewritten_query, rewritten_factor)
+            payload = await self._knowledge.query_factor(rewritten_query)
         except (httpx.HTTPError, ValueError):
             logger.exception("knowledge query failed: query=%s", query)
             raise KnowledgeServiceError("知识服务调用失败，请稍后重试")

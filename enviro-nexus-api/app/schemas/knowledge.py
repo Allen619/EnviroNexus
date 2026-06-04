@@ -67,6 +67,7 @@ class KnowledgeMethodCardIdentity(BaseModel):
 
 class KnowledgeMethodCardContent(BaseModel):
     card_id: str | None = None
+    factor: str | None = None
     identity: KnowledgeMethodCardIdentity | None = None
 
 

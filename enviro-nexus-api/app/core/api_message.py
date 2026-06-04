@@ -39,7 +39,7 @@ QUERY_REWRITE_SYSTEM_PROMPT = """你是 EnviroNexus 知识库查询改写器。
 - should_query_knowledge：是否建议调用知识库。
 - known_supported_factor：是否属于当前知识库已收录因子。
 - rewritten_query：传给知识库的 query。
-- factor_name：识别出的标准因子名；无法识别时为 null。
+- factor_name：识别出的标准因子名，仅用于 API 内部判断和日志语义；无法识别时为 null，knowledge 查询仍只接收 rewritten_query。
 - confidence：0 到 1 的置信度。"""
 
 KNOWLEDGE_QUERY_NOT_MATCHED_REPLY = "与知识库不匹配，请重试"

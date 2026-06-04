@@ -14,6 +14,7 @@ from app.schemas.factor_query import (
     MethodCardIdentity,
     MethodCardResponse,
 )
+from app.schemas.knowledge import KnowledgeFactorQueryPayload
 
 USER_HEADERS = {"X-User-Id": "test-user"}
 DEFAULT_QUERY_BODY = {
@@ -173,11 +174,16 @@ async def test_factor_query_missing_session_id_422(client):
 async def test_factor_query_does_not_require_factor_name(client):
     created = await client.post("/api/v1/sessions", headers=USER_HEADERS)
     session_id = created.json()["data"]["session_id"]
-    response = await client.post(
-        "/api/v1/factors/query",
-        headers=USER_HEADERS,
-        json={"query": "pH 怎么测？", "session_id": session_id},
-    )
+    with patch(
+        "app.clients.knowledge_client.KnowledgeClient.query_factor",
+        new_callable=AsyncMock,
+        return_value=KnowledgeFactorQueryPayload(matched=False),
+    ):
+        response = await client.post(
+            "/api/v1/factors/query",
+            headers=USER_HEADERS,
+            json={"query": "pH 怎么测？", "session_id": session_id},
+        )
 
     assert response.status_code == 200
     data = response.json()
@@ -188,15 +194,20 @@ async def test_factor_query_does_not_require_factor_name(client):
 async def test_factor_query_ignores_legacy_blank_factor_name(client):
     created = await client.post("/api/v1/sessions", headers=USER_HEADERS)
     session_id = created.json()["data"]["session_id"]
-    response = await client.post(
-        "/api/v1/factors/query",
-        headers=USER_HEADERS,
-        json={
-            "query": "pH 怎么测？",
-            "session_id": session_id,
-            "factor_name": "   ",
-        },
-    )
+    with patch(
+        "app.clients.knowledge_client.KnowledgeClient.query_factor",
+        new_callable=AsyncMock,
+        return_value=KnowledgeFactorQueryPayload(matched=False),
+    ):
+        response = await client.post(
+            "/api/v1/factors/query",
+            headers=USER_HEADERS,
+            json={
+                "query": "pH 怎么测？",
+                "session_id": session_id,
+                "factor_name": "   ",
+            },
+        )
 
     assert response.status_code == 200
     data = response.json()

@@ -111,7 +111,7 @@ async def test_query_returns_reply_and_sources():
     assert len(resp.data.sources) == 1
     assert resp.data.sources[0].source_title == "HJ 828-2017"
     assert resp.data.warnings == []
-    knowledge.query_factor.assert_awaited_once_with("COD怎么测", "化学需氧量")
+    knowledge.query_factor.assert_awaited_once_with("COD怎么测")
 
 
 @pytest.mark.asyncio
@@ -144,7 +144,7 @@ async def test_query_rewrites_user_query_before_knowledge_lookup():
         user_id=user_id,
     )
 
-    knowledge.query_factor.assert_awaited_once_with("高锰酸盐指数 怎么测？", "高锰酸盐指数")
+    knowledge.query_factor.assert_awaited_once_with("高锰酸盐指数 怎么测？")
 
 
 @pytest.mark.asyncio
@@ -176,7 +176,44 @@ async def test_query_rewrite_accepts_json_with_model_reasoning_prefix():
         user_id=user_id,
     )
 
-    knowledge.query_factor.assert_awaited_once_with("色度 怎么测？", "色度")
+    knowledge.query_factor.assert_awaited_once_with("色度 怎么测？")
+
+
+@pytest.mark.asyncio
+async def test_query_calls_knowledge_when_rewriter_has_no_factor_name():
+    store = InMemorySessionStore()
+    user_id = "user-1"
+    session_id = await _create_session(store, user_id)
+    knowledge = AsyncMock()
+    knowledge.query_factor.return_value = KnowledgeFactorQueryPayload(matched=False)
+    svc = ChatQueryService(
+        knowledge_client=knowledge,
+        session_store=store,
+        chat_model=FakeListChatModel(responses=["不应调用"]),
+        summarizer=FakeListChatModel(responses=["标题"]),
+        rewrite_model=FakeListChatModel(
+            responses=[
+                _rewrite_response(
+                    should_query_knowledge=True,
+                    known_supported_factor=False,
+                    rewritten_query="COD 怎么测？",
+                    factor_name=None,
+                    confidence=0.8,
+                )
+            ]
+        ),
+        char_threshold=100000,
+    )
+
+    resp = await svc.query(
+        query="COD 怎么测？",
+        request_id=None,
+        session_id=session_id,
+        user_id=user_id,
+    )
+
+    assert resp.code == "FACTOR_NOT_FOUND"
+    knowledge.query_factor.assert_awaited_once_with("COD 怎么测？")
 
 
 @pytest.mark.asyncio
