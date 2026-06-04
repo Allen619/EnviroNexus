@@ -6,6 +6,7 @@ from app.schemas.common import ApiResponse
 class FactorQueryRequest(BaseModel):
     query: str = Field(..., min_length=1, max_length=500, description="用户问题（首尾空白会被 trim）")
     session_id: str = Field(..., min_length=1, description="会话 ID，须先 POST /api/v1/sessions 创建")
+    factor_name: str = Field(..., min_length=1, description="因子名，由前端输入并透传给 knowledge 服务")
 
     @field_validator("query")
     @classmethod
@@ -13,6 +14,14 @@ class FactorQueryRequest(BaseModel):
         stripped = v.strip()
         if not stripped:
             raise ValueError("请输入问题内容")
+        return stripped
+
+    @field_validator("factor_name")
+    @classmethod
+    def strip_factor_name(cls, v: str) -> str:
+        stripped = v.strip()
+        if not stripped:
+            raise ValueError("请输入因子名")
         return stripped
 
 

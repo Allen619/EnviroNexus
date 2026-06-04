@@ -16,7 +16,11 @@ from app.schemas.factor_query import (
 )
 
 USER_HEADERS = {"X-User-Id": "test-user"}
-DEFAULT_QUERY_BODY = {"query": "COD 怎么测？", "session_id": "test-session-id"}
+DEFAULT_QUERY_BODY = {
+    "query": "COD 怎么测？",
+    "session_id": "test-session-id",
+    "factor_name": "化学需氧量",
+}
 
 
 @pytest.mark.asyncio
@@ -48,7 +52,7 @@ async def test_factor_query_matched(client):
         "app.services.chat_query_service.ChatQueryService.query",
         new_callable=AsyncMock,
         return_value=mock_response,
-    ):
+    ) as mocked_query:
         response = await client.post(
             "/api/v1/factors/query",
             headers=USER_HEADERS,
@@ -63,6 +67,7 @@ async def test_factor_query_matched(client):
     assert data["data"]["matched"] is True
     assert data["data"]["reply"]
     assert data["data"]["sources"][0]["source_title"] == "HJ 828-2017"
+    assert mocked_query.call_args.kwargs["factor_name"] == "化学需氧量"
 
 
 @pytest.mark.asyncio
@@ -91,7 +96,11 @@ async def test_factor_query_not_matched(client):
         response = await client.post(
             "/api/v1/factors/query",
             headers=USER_HEADERS,
-            json={"query": "不存在的因子", "session_id": "test-session-id"},
+            json={
+                "query": "不存在的因子",
+                "session_id": "test-session-id",
+                "factor_name": "未知因子",
+            },
         )
 
     assert response.status_code == 200
@@ -108,7 +117,7 @@ async def test_factor_query_validation_422(client):
     response = await client.post(
         "/api/v1/factors/query",
         headers=USER_HEADERS,
-        json={"query": "", "session_id": "test-session-id"},
+        json={"query": "", "session_id": "test-session-id", "factor_name": "化学需氧量"},
     )
 
     assert response.status_code == 422
@@ -137,7 +146,7 @@ async def test_factor_query_blank_query_422(client):
     response = await client.post(
         "/api/v1/factors/query",
         headers=USER_HEADERS,
-        json={"query": "   ", "session_id": "s1"},
+        json={"query": "   ", "session_id": "s1", "factor_name": "化学需氧量"},
     )
 
     assert response.status_code == 422
@@ -152,7 +161,39 @@ async def test_factor_query_missing_session_id_422(client):
     response = await client.post(
         "/api/v1/factors/query",
         headers=USER_HEADERS,
-        json={"query": "COD"},
+        json={"query": "COD", "factor_name": "化学需氧量"},
+    )
+
+    assert response.status_code == 422
+    data = response.json()
+    assert data["success"] is False
+    assert data["code"] == "VALIDATION_ERROR"
+
+
+@pytest.mark.asyncio
+async def test_factor_query_missing_factor_name_422(client):
+    response = await client.post(
+        "/api/v1/factors/query",
+        headers=USER_HEADERS,
+        json={"query": "COD", "session_id": "test-session-id"},
+    )
+
+    assert response.status_code == 422
+    data = response.json()
+    assert data["success"] is False
+    assert data["code"] == "VALIDATION_ERROR"
+
+
+@pytest.mark.asyncio
+async def test_factor_query_blank_factor_name_422(client):
+    response = await client.post(
+        "/api/v1/factors/query",
+        headers=USER_HEADERS,
+        json={
+            "query": "COD",
+            "session_id": "test-session-id",
+            "factor_name": "   ",
+        },
     )
 
     assert response.status_code == 422
@@ -172,7 +213,11 @@ async def test_factor_query_knowledge_service_error_502(client):
         response = await client.post(
             "/api/v1/factors/query",
             headers=USER_HEADERS,
-            json={"query": "COD", "session_id": "test-session-id"},
+            json={
+                "query": "COD",
+                "session_id": "test-session-id",
+                "factor_name": "化学需氧量",
+            },
         )
 
     assert response.status_code == 502
@@ -191,7 +236,11 @@ async def test_factor_query_llm_service_error_502(client):
         response = await client.post(
             "/api/v1/factors/query",
             headers=USER_HEADERS,
-            json={"query": "COD", "session_id": "test-session-id"},
+            json={
+                "query": "COD",
+                "session_id": "test-session-id",
+                "factor_name": "化学需氧量",
+            },
         )
 
     assert response.status_code == 502
@@ -212,7 +261,7 @@ async def test_factor_query_upstream_timeout_502(client):
         response = await client.post(
             "/api/v1/factors/query",
             headers=USER_HEADERS,
-            json={"query": "COD", "session_id": session_id},
+            json={"query": "COD", "session_id": session_id, "factor_name": "化学需氧量"},
         )
 
     assert response.status_code == 502
@@ -237,12 +286,12 @@ async def test_factor_query_multi_turn_session(client):
         first = await client.post(
             "/api/v1/factors/query",
             headers=headers,
-            json={"query": "第一轮", "session_id": session_id},
+            json={"query": "第一轮", "session_id": session_id, "factor_name": "化学需氧量"},
         )
         second = await client.post(
             "/api/v1/factors/query",
             headers=headers,
-            json={"query": "第二轮", "session_id": session_id},
+            json={"query": "第二轮", "session_id": session_id, "factor_name": "化学需氧量"},
         )
 
     assert first.status_code == 200

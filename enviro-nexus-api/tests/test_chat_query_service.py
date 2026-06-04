@@ -78,6 +78,7 @@ async def test_query_returns_reply_and_sources():
     )
     resp = await svc.query(
         query="COD怎么测",
+        factor_name="化学需氧量",
         request_id="req-1",
         session_id=session_id,
         user_id=user_id,
@@ -88,6 +89,7 @@ async def test_query_returns_reply_and_sources():
     assert len(resp.data.sources) == 1
     assert resp.data.sources[0].source_title == "HJ 828-2017"
     assert resp.data.warnings == []
+    knowledge.query_factor.assert_awaited_once_with("COD怎么测", "化学需氧量")
 
 
 @pytest.mark.asyncio
@@ -106,6 +108,7 @@ async def test_not_matched_appends_session_with_empty_sources():
     )
     resp = await svc.query(
         query="未知因子",
+        factor_name="未知因子",
         request_id=None,
         session_id=session_id,
         user_id=user_id,
@@ -131,6 +134,7 @@ async def test_query_requires_existing_session():
     with pytest.raises(SessionNotFoundError):
         await svc.query(
             query="COD",
+            factor_name="化学需氧量",
             request_id=None,
             session_id="nonexistent",
             user_id="user-1",
@@ -152,6 +156,7 @@ async def test_query_wrong_user():
     with pytest.raises(SessionNotFoundError):
         await svc.query(
             query="COD",
+            factor_name="化学需氧量",
             request_id=None,
             session_id=session_id,
             user_id="other-user",
@@ -174,6 +179,7 @@ async def test_query_persists_sources_on_assistant_message():
     )
     await svc.query(
         query="COD怎么测",
+        factor_name="化学需氧量",
         request_id=None,
         session_id=session_id,
         user_id=user_id,
@@ -203,6 +209,7 @@ async def test_query_generates_title_after_first_turn():
     )
     await svc.query(
         query="COD怎么测",
+        factor_name="化学需氧量",
         request_id=None,
         session_id=session_id,
         user_id=user_id,
@@ -229,6 +236,7 @@ async def test_query_title_fallback_on_summarizer_failure():
     )
     await svc.query(
         query=query_text,
+        factor_name="化学需氧量",
         request_id=None,
         session_id=session_id,
         user_id=user_id,

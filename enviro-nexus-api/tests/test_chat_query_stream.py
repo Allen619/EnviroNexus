@@ -92,6 +92,7 @@ async def test_query_stream_emits_meta_token_done():
     raw = await _collect_stream(
         svc,
         query="COD怎么测",
+        factor_name="化学需氧量",
         session_id=session_id,
         user_id=user_id,
     )
@@ -109,6 +110,7 @@ async def test_query_stream_emits_meta_token_done():
     assert loaded is not None
     assert len(loaded.messages) == 2
     assert loaded.messages[1].content == "COD测定"
+    knowledge.query_factor.assert_awaited_once_with("COD怎么测", "化学需氧量")
 
 
 @pytest.mark.asyncio
@@ -128,6 +130,7 @@ async def test_query_stream_not_matched_emits_fallback_token():
     raw = await _collect_stream(
         svc,
         query="未知",
+        factor_name="未知因子",
         session_id=session_id,
         user_id=user_id,
     )
@@ -155,6 +158,7 @@ async def test_query_stream_llm_failure_emits_error_without_persist():
     raw = await _collect_stream(
         svc,
         query="COD",
+        factor_name="化学需氧量",
         session_id=session_id,
         user_id=user_id,
     )

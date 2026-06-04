@@ -40,6 +40,7 @@ async def query_factor(
     request_id = getattr(request.state, "request_id", None)
     return await chat_service.query(
         query=body.query,
+        factor_name=body.factor_name,
         request_id=request_id,
         session_id=body.session_id,
         user_id=user_id,
@@ -66,6 +67,7 @@ async def query_factor_stream(
     return StreamingResponse(
         chat_service.query_stream(
             query=body.query,
+            factor_name=body.factor_name,
             session_id=body.session_id,
             user_id=user_id,
         ),

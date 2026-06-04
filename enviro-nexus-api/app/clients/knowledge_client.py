@@ -52,10 +52,14 @@ class KnowledgeClient:
             logger.exception("知识服务响应格式无效: url=%s", url)
             raise ValueError("知识服务响应格式无效") from None
 
-    async def query_factor(self, query: str) -> KnowledgeFactorQueryPayload:
+    async def query_factor(self, query: str, factor_name: str) -> KnowledgeFactorQueryPayload:
         """调用知识服务的因子查询接口。"""
         url = f"{self._base_url}/api/v1/factors/query"
-        data = await self._request("POST", url, json={"query": query})
+        data = await self._request(
+            "POST",
+            url,
+            json={"query": query, "factor_name": factor_name},
+        )
         return self._validate_payload(KnowledgeFactorQueryPayload, data, url)
 
     async def get_method_card(self, card_id: str) -> KnowledgeMethodCardPayload:

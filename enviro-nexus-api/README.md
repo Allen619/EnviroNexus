@@ -87,7 +87,7 @@ docker compose up -d
 | `GET` | `/api/v1/sessions` | 分页列出当前用户会话（`page`、`page_size`） |
 | `GET` | `/api/v1/sessions/{session_id}` | 获取会话详情（含完整消息与 assistant 的 `sources`） |
 | `DELETE` | `/api/v1/sessions/{session_id}` | 删除会话 |
-| `POST` | `/api/v1/factors/query` | 在已有会话内查询；请求体 `session_id` + `query`，返回 `reply` 与 `sources` |
+| `POST` | `/api/v1/factors/query` | 在已有会话内查询；请求体 `session_id` + `query` + `factor_name`，返回 `reply` 与 `sources` |
 | `POST` | `/api/v1/factors/query/stream` | 同上请求体；SSE 流式返回（`meta` → `token` → `done`） |
 
 设计细节见 `docs/superpowers/specs/2026-06-03-multi-turn-session-design.md`。
@@ -95,7 +95,7 @@ docker compose up -d
 ### 典型联调流程
 
 1. **新对话**：`POST /api/v1/sessions`（带 `X-User-Id`）→ 从响应 `data.session_id` 取得会话 ID。
-2. **发送消息**：`POST /api/v1/factors/query`，请求体包含 `session_id` 与 `query`（同样带 `X-User-Id`）。
+2. **发送消息**：`POST /api/v1/factors/query`，请求体包含 `session_id`、`query` 与 `factor_name`（同样带 `X-User-Id`）。
 3. **追问**：同一 `session_id` 重复调用 `POST /api/v1/factors/query`。
 4. **历史列表**：`GET /api/v1/sessions`。
 5. **打开历史**：`GET /api/v1/sessions/{session_id}`。
@@ -111,14 +111,14 @@ curl -s -X POST http://localhost:8080/api/v1/sessions \
 # 在会话内查询
 curl -s -X POST http://localhost:8080/api/v1/factors/query \
   -H "X-User-Id: user-001" -H "Content-Type: application/json" \
-  -d '{"session_id":"<上一步返回的 session_id>","query":"COD 怎么测？"}'
+  -d '{"session_id":"<上一步返回的 session_id>","query":"COD 怎么测？","factor_name":"化学需氧量"}'
 ```
 
 ```bash
 # 流式查询（SSE）
 curl -N -X POST http://localhost:8080/api/v1/factors/query/stream \
   -H "X-User-Id: user-001" -H "Content-Type: application/json" \
-  -d '{"session_id":"<session_id>","query":"COD 怎么测？"}'
+  -d '{"session_id":"<session_id>","query":"COD 怎么测？","factor_name":"化学需氧量"}'
 ```
 
 设计细节见 `docs/superpowers/specs/2026-06-03-stream-query-design.md`。

@@ -113,12 +113,12 @@ class ChatQueryService:
         ]
 
     async def _prepare_turn(
-        self, query: str, session_id: str, user_id: str
+        self, query: str, factor_name: str, session_id: str, user_id: str
     ) -> TurnContext:
         record = await self._load_session(session_id, user_id)
         await self._compressor.maybe_compress(record)
         try:
-            payload = await self._knowledge.query_factor(query)
+            payload = await self._knowledge.query_factor(query, factor_name)
         except (httpx.HTTPError, ValueError):
             logger.exception("knowledge query failed: query=%s", query)
             raise KnowledgeServiceError("知识服务调用失败，请稍后重试")
@@ -177,11 +177,12 @@ class ChatQueryService:
     async def query(
         self,
         query: str,
+        factor_name: str,
         request_id: str | None,
         session_id: str,
         user_id: str,
     ) -> FactorQueryResponse:
-        ctx = await self._prepare_turn(query, session_id, user_id)
+        ctx = await self._prepare_turn(query, factor_name, session_id, user_id)
 
         if not ctx.payload.matched:
             reply = NOT_MATCHED_REPLY_FALLBACK
@@ -215,12 +216,13 @@ class ChatQueryService:
     async def query_stream(
         self,
         query: str,
+        factor_name: str,
         session_id: str,
         user_id: str,
     ):
         from app.schemas.stream_query import StreamDoneEvent, StreamErrorEvent, StreamTokenEvent
 
-        ctx = await self._prepare_turn(query, session_id, user_id)
+        ctx = await self._prepare_turn(query, factor_name, session_id, user_id)
         yield format_sse("meta", self._build_meta_payload(ctx))
 
         if not ctx.payload.matched:
