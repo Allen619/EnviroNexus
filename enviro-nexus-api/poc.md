@@ -505,7 +505,7 @@ chore: init uv project
 示例：
 
 ```plain
-KNOWLEDGE_SERVICE_BASE_URL=http://localhost:8000
+KNOWLEDGE_SERVICE_BASE_URL=http://127.0.0.1:8010/api/v1
 API_SERVICE_BASE_URL=http://localhost:8080
 ```
 

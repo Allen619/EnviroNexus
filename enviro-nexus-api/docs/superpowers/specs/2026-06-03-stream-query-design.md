@@ -6,7 +6,7 @@
 **关联**：enviro-nexus-knowledge（检索）、enviro-nexus-web（消费方）  
 **前置**：[`2026-06-03-multi-turn-session-design.md`](2026-06-03-multi-turn-session-design.md)
 
-**后续契约更新**：`2026-06-04-factor-name-knowledge-pass-through-design.md` 已将查询请求体扩展为必填 `factor_name`，并同步适用于 `/api/v1/factors/query` 与 `/api/v1/factors/query/stream`。
+**后续契约更新**：当前实现以 enviro-nexus-knowledge 真实契约为准，请求体只要求 `query` 与 `session_id`。`factor_name` 仅作为历史兼容字段被忽略，不再透传给 knowledge。
 
 ---
 
@@ -54,12 +54,11 @@
 ```json
 {
   "query": "COD 怎么测？",
-  "session_id": "uuid",
-  "factor_name": "化学需氧量"
+  "session_id": "uuid"
 }
 ```
 
-校验规则同 `FactorQueryRequest`：`query` strip 后非空、`session_id` 必填、`factor_name` strip 后非空。
+校验规则同 `FactorQueryRequest`：`query` strip 后非空、`session_id` 必填。
 
 ### 3.3 模块职责
 
@@ -80,7 +79,7 @@ sequenceDiagram
   participant KS as Knowledge
   participant LLM as MiniMax
 
-  FE->>API: POST query + session_id + factor_name + X-User-Id
+  FE->>API: POST query + session_id + X-User-Id
   Note over API: 校验/会话/知识失败 → JSON 4xx/502
   CQ->>CQ: _prepare_turn (load + compress)
   CQ->>KS: query_factor
@@ -182,7 +181,6 @@ data: {json}
 |------|----------|------|------|
 | 缺少 `X-User-Id` | JSON | 422 | `VALIDATION_ERROR` |
 | 空/纯空白 `query` | JSON | 422 | `VALIDATION_ERROR` |
-| 缺失/空白 `factor_name` | JSON | 422 | `VALIDATION_ERROR` |
 | 会话不存在 / 越权 | JSON | 404 | `SESSION_NOT_FOUND` |
 | 知识服务失败 | JSON | 502 | `KNOWLEDGE_SERVICE_ERROR` |
 | LLM 流式中途失败 | SSE `error` 事件 | 200（流已开启） | `LLM_SERVICE_ERROR` |
@@ -269,7 +267,7 @@ const resp = await fetch("/api/v1/factors/query/stream", {
     "Content-Type": "application/json",
     "X-User-Id": userId,
   },
-  body: JSON.stringify({ query, session_id, factor_name }),
+  body: JSON.stringify({ query, session_id }),
 });
 
 const reader = resp.body.getReader();

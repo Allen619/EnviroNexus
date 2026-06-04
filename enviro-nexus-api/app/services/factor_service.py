@@ -32,8 +32,11 @@ class FactorService:
         card = None
         if payload.card is not None:
             identity = None
+            factor = payload.card.factor
             if payload.card.identity is not None:
-                identity = MethodCardIdentity(factor=payload.card.identity.factor)
+                factor = payload.card.identity.factor or factor
+            if factor is not None:
+                identity = MethodCardIdentity(factor=factor)
             card = MethodCardContent(
                 card_id=payload.card.card_id,
                 identity=identity,

@@ -59,13 +59,13 @@ docker compose up -d
 | 服务 | 端口 |
 |---|---|
 | enviro-nexus-api | 8080 |
-| enviro-nexus-knowledge | 8000 |
+| enviro-nexus-knowledge | 8010 |
 
 ## 环境变量
 
 | 变量 | 默认值 | 说明 |
 |---|---|---|
-| `KNOWLEDGE_SERVICE_BASE_URL` | `http://localhost:8000` | 知识服务地址 |
+| `KNOWLEDGE_SERVICE_BASE_URL` | `http://127.0.0.1:8010/api/v1` | 知识服务 API v1 前缀 |
 | `KNOWLEDGE_SERVICE_TIMEOUT` | `10.0` | 知识服务超时（秒） |
 | `LOG_LEVEL` | `INFO` | 日志级别 |
 | `DEBUG` | `false` | 调试模式 |
@@ -145,8 +145,10 @@ cp .env.example .env
 确保知识服务 (enviro-nexus-knowledge) 已启动并可访问：
 
 ```bash
-curl http://localhost:8000/api/v1/health
+curl http://127.0.0.1:8010/api/v1/health
 ```
+
+API 调用 knowledge 的因子查询契约为 `POST /api/v1/factors/query`，请求体只包含改写后的 `query`。`factor_name` 不再透传给 knowledge，最终是否命中以 knowledge 返回的 `matched`、`factor`、`matched_alias`、`card_id` 为准。
 
 ## 项目结构
 

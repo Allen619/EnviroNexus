@@ -4,7 +4,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - KNOWLEDGE_SERVICE_BASE_URL=http://knowledge:8000
+      - KNOWLEDGE_SERVICE_BASE_URL=http://knowledge:8010/api/v1
       - LOG_LEVEL=INFO
     depends_on:
       - knowledge
@@ -12,4 +12,4 @@ services:
   knowledge:
     image: enviro-nexus-knowledge:latest
     ports:
-      - "8000:8000"
+      - "8010:8010"

@@ -1,10 +1,12 @@
 # 因子名透传 Knowledge 服务设计说明
 
-**状态**：已确认，待实施计划  
+**状态**：已废弃（2026-06-05 已按 knowledge 真实契约改为仅发送 `query`）  
 **日期**：2026-06-04  
 **仓库**：enviro-nexus-api  
 **关联服务**：enviro-nexus-knowledge  
 **关联接口**：`POST /api/v1/factors/query/stream`，`POST /api/v1/factors/query`
+
+> 废弃说明：enviro-nexus-knowledge 当前 `POST /api/v1/factors/query` 请求体只有 `query` 字段，不接收 `factor_name`。API 当前实现保留前端旧字段兼容，但不会校验或透传 `factor_name`；最终命中结果以 knowledge 响应为准。
 
 ## 1. 目标
 

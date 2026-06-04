@@ -1,5 +1,7 @@
 # Factor Name Knowledge Pass-Through Implementation Plan
 
+> Superseded on 2026-06-05: enviro-nexus-knowledge accepts only `{ "query": ... }` for `POST /api/v1/factors/query`; API keeps `factor_name` only as a legacy ignored field and does not validate or pass it through.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add required `factor_name` input to factor query requests and pass it through to the knowledge service for both streaming and non-streaming query paths.

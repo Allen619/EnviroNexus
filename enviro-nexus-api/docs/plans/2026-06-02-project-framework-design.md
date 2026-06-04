@@ -89,7 +89,7 @@ class Settings(BaseSettings):
     app_name: str = "enviro-nexus-api"
     app_version: str = "0.1.0"
     debug: bool = False
-    knowledge_service_base_url: str = "http://localhost:8000"
+    knowledge_service_base_url: str = "http://127.0.0.1:8010/api/v1"
     knowledge_service_timeout: float = 10.0
     log_level: str = "INFO"
 
@@ -164,7 +164,7 @@ v1_router.include_router(factors.router, tags=["factors"])
 | 服务 | 默认端口 | 关键环境变量 |
 |---|---|---|
 | enviro-nexus-api | 8080 | `KNOWLEDGE_SERVICE_BASE_URL`, `LOG_LEVEL`, `DEBUG` |
-| enviro-nexus-knowledge | 8000 | — |
+| enviro-nexus-knowledge | 8010 | — |
 
 ## 核心依赖
 
