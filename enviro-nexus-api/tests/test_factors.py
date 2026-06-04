@@ -19,7 +19,6 @@ USER_HEADERS = {"X-User-Id": "test-user"}
 DEFAULT_QUERY_BODY = {
     "query": "COD 怎么测？",
     "session_id": "test-session-id",
-    "factor_name": "化学需氧量",
 }
 
 
@@ -67,7 +66,7 @@ async def test_factor_query_matched(client):
     assert data["data"]["matched"] is True
     assert data["data"]["reply"]
     assert data["data"]["sources"][0]["source_title"] == "HJ 828-2017"
-    assert mocked_query.call_args.kwargs["factor_name"] == "化学需氧量"
+    assert "factor_name" not in mocked_query.call_args.kwargs
 
 
 @pytest.mark.asyncio
@@ -171,35 +170,37 @@ async def test_factor_query_missing_session_id_422(client):
 
 
 @pytest.mark.asyncio
-async def test_factor_query_missing_factor_name_422(client):
+async def test_factor_query_does_not_require_factor_name(client):
+    created = await client.post("/api/v1/sessions", headers=USER_HEADERS)
+    session_id = created.json()["data"]["session_id"]
     response = await client.post(
         "/api/v1/factors/query",
         headers=USER_HEADERS,
-        json={"query": "COD", "session_id": "test-session-id"},
+        json={"query": "pH 怎么测？", "session_id": session_id},
     )
 
-    assert response.status_code == 422
+    assert response.status_code == 200
     data = response.json()
-    assert data["success"] is False
-    assert data["code"] == "VALIDATION_ERROR"
+    assert data["success"] is True
 
 
 @pytest.mark.asyncio
-async def test_factor_query_blank_factor_name_422(client):
+async def test_factor_query_ignores_legacy_blank_factor_name(client):
+    created = await client.post("/api/v1/sessions", headers=USER_HEADERS)
+    session_id = created.json()["data"]["session_id"]
     response = await client.post(
         "/api/v1/factors/query",
         headers=USER_HEADERS,
         json={
-            "query": "COD",
-            "session_id": "test-session-id",
+            "query": "pH 怎么测？",
+            "session_id": session_id,
             "factor_name": "   ",
         },
     )
 
-    assert response.status_code == 422
+    assert response.status_code == 200
     data = response.json()
-    assert data["success"] is False
-    assert data["code"] == "VALIDATION_ERROR"
+    assert data["success"] is True
 
 
 @pytest.mark.asyncio

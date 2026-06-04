@@ -7,6 +7,10 @@ from app.main import app
 from app.services.session_store import build_session_store
 
 DEFAULT_USER_HEADERS = {"X-User-Id": "test-user"}
+DEFAULT_REWRITE_RESPONSE = (
+    '{"should_query_knowledge":true,"known_supported_factor":true,'
+    '"rewritten_query":"pH 怎么测？","factor_name":"pH","confidence":0.95}'
+)
 
 @pytest.fixture(autouse=True)
 def init_session_store():
@@ -30,6 +34,7 @@ def stub_chat_query_service_factory(monkeypatch):
             session_store=session_store,
             chat_model=FakeListChatModel(responses=["测试回复"]),
             summarizer=FakeListChatModel(responses=["测试摘要"]),
+            rewrite_model=FakeListChatModel(responses=[DEFAULT_REWRITE_RESPONSE] * 20),
             max_recent_messages=settings.max_recent_turns,
             char_threshold=settings.compress_char_threshold,
         )

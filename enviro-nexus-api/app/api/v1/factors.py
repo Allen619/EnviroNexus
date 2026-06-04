@@ -40,7 +40,6 @@ async def query_factor(
     request_id = getattr(request.state, "request_id", None)
     return await chat_service.query(
         query=body.query,
-        factor_name=body.factor_name,
         request_id=request_id,
         session_id=body.session_id,
         user_id=user_id,
@@ -64,13 +63,13 @@ async def query_factor_stream(
     user_id: str = Depends(get_user_id),
 ):
     """与 POST /factors/query 相同请求体与鉴权；响应为 SSE。"""
+    stream = await chat_service.open_query_stream(
+        query=body.query,
+        session_id=body.session_id,
+        user_id=user_id,
+    )
     return StreamingResponse(
-        chat_service.query_stream(
-            query=body.query,
-            factor_name=body.factor_name,
-            session_id=body.session_id,
-            user_id=user_id,
-        ),
+        stream,
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
