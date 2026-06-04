@@ -22,17 +22,41 @@ class CapturingHttpClient:
 
 
 @pytest.mark.asyncio
-async def test_query_factor_sends_factor_name_to_knowledge():
+async def test_query_factor_uses_mock_without_http_call():
     http_client = CapturingHttpClient()
     settings = Settings(knowledge_service_base_url="http://knowledge.test")
     client = KnowledgeClient(http_client=http_client, settings=settings)
 
-    await client.query_factor("COD 怎么测？", "化学需氧量")
+    payload = await client.query_factor("pH 怎么测？", "pH")
 
-    method, url, kwargs = http_client.calls[0]
-    assert method == "POST"
-    assert url == "http://knowledge.test/api/v1/factors/query"
-    assert kwargs["json"] == {
-        "query": "COD 怎么测？",
-        "factor_name": "化学需氧量",
-    }
+    assert http_client.calls == []
+    assert payload.matched is True
+    assert payload.factor == "pH"
+    assert payload.card_id == "mock_ph"
+
+
+@pytest.mark.asyncio
+async def test_query_factor_mock_does_not_match_unsupported_factor():
+    http_client = CapturingHttpClient()
+    settings = Settings(knowledge_service_base_url="http://knowledge.test")
+    client = KnowledgeClient(http_client=http_client, settings=settings)
+
+    payload = await client.query_factor("COD 怎么测？", "COD")
+
+    assert http_client.calls == []
+    assert payload.matched is False
+    assert payload.factor == "COD"
+    assert payload.card_id is None
+
+
+@pytest.mark.asyncio
+async def test_get_method_card_uses_mock_without_http_call():
+    http_client = CapturingHttpClient()
+    settings = Settings(knowledge_service_base_url="http://knowledge.test")
+    client = KnowledgeClient(http_client=http_client, settings=settings)
+
+    payload = await client.get_method_card("mock_water_cod_hj828_2017")
+
+    assert http_client.calls == []
+    assert payload.card is not None
+    assert payload.card.card_id == "mock_water_cod_hj828_2017"

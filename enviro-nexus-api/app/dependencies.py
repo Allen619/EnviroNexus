@@ -73,6 +73,7 @@ def get_chat_query_service(
         session_store=session_store,
         chat_model=get_chat_model(settings),
         summarizer=get_summarizer_model(settings),
+        rewrite_model=get_chat_model(settings, temperature=0),
         max_recent_messages=settings.max_recent_turns,
         char_threshold=settings.compress_char_threshold,
     )

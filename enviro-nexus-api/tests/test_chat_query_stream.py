@@ -4,14 +4,16 @@ from unittest.mock import AsyncMock
 
 import pytest
 from langchain_core.language_models import BaseChatModel
+from langchain_core.language_models.fake_chat_models import FakeListChatModel
 from langchain_core.messages import AIMessageChunk
 from langchain_core.outputs import ChatGenerationChunk
 
+from app.core.api_message import KNOWLEDGE_QUERY_NOT_MATCHED_REPLY
 from app.llm.prompts import NOT_MATCHED_REPLY_FALLBACK
 from app.schemas.knowledge import KnowledgeFactorQueryPayload
 from app.services.chat_query_service import ChatQueryService
 from app.services.session_store import InMemorySessionStore
-from tests.test_chat_query_service import _create_session, _matched_payload
+from tests.test_chat_query_service import _create_session, _matched_payload, _rewrite_response
 
 
 def parse_sse_events(raw: str) -> list[tuple[str, dict[str, Any]]]:
@@ -169,3 +171,41 @@ async def test_query_stream_llm_failure_emits_error_without_persist():
     loaded = await store.get(session_id)
     assert loaded is not None
     assert loaded.messages == []
+
+
+@pytest.mark.asyncio
+async def test_query_stream_returns_not_matched_when_rewriter_cannot_infer_factor():
+    store = InMemorySessionStore()
+    user_id = "user-1"
+    session_id = await _create_session(store, user_id)
+    knowledge = AsyncMock()
+    svc = ChatQueryService(
+        knowledge_client=knowledge,
+        session_store=store,
+        chat_model=ChunkedFakeChatModel(chunks=["不应调用"]),
+        summarizer=ChunkedFakeChatModel(chunks=["摘要"]),
+        rewrite_model=FakeListChatModel(
+            responses=[
+                _rewrite_response(
+                    should_query_knowledge=False,
+                    known_supported_factor=False,
+                    rewritten_query="",
+                    factor_name=None,
+                    confidence=0.1,
+                )
+            ]
+        ),
+        char_threshold=100000,
+    )
+    raw = await _collect_stream(
+        svc,
+        query="今天适合吃什么？",
+        session_id=session_id,
+        user_id=user_id,
+    )
+    events = parse_sse_events(raw)
+    assert [t for t, _ in events] == ["meta", "token", "done"]
+    assert events[0][1]["code"] == "FACTOR_NOT_FOUND"
+    assert events[1] == ("token", {"content": KNOWLEDGE_QUERY_NOT_MATCHED_REPLY})
+    assert events[2][1]["reply"] == KNOWLEDGE_QUERY_NOT_MATCHED_REPLY
+    knowledge.query_factor.assert_not_called()

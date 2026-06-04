@@ -1,3 +1,4 @@
+import json
 from datetime import datetime, timezone
 from unittest.mock import AsyncMock
 
@@ -5,6 +6,7 @@ import pytest
 from langchain_core.language_models import BaseChatModel
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
 
+from app.core.api_message import KNOWLEDGE_QUERY_NOT_MATCHED_REPLY
 from app.core.exceptions import SessionNotFoundError
 from app.llm.prompts import fallback_title
 from app.schemas.knowledge import (
@@ -45,6 +47,26 @@ def _matched_payload() -> KnowledgeFactorQueryPayload:
                 )
             ],
         ),
+    )
+
+
+def _rewrite_response(
+    *,
+    should_query_knowledge: bool = True,
+    known_supported_factor: bool = True,
+    rewritten_query: str = "高锰酸盐指数 怎么测？",
+    factor_name: str | None = "高锰酸盐指数",
+    confidence: float = 0.95,
+) -> str:
+    return json.dumps(
+        {
+            "should_query_knowledge": should_query_knowledge,
+            "known_supported_factor": known_supported_factor,
+            "rewritten_query": rewritten_query,
+            "factor_name": factor_name,
+            "confidence": confidence,
+        },
+        ensure_ascii=False,
     )
 
 
@@ -90,6 +112,110 @@ async def test_query_returns_reply_and_sources():
     assert resp.data.sources[0].source_title == "HJ 828-2017"
     assert resp.data.warnings == []
     knowledge.query_factor.assert_awaited_once_with("COD怎么测", "化学需氧量")
+
+
+@pytest.mark.asyncio
+async def test_query_rewrites_user_query_before_knowledge_lookup():
+    store = InMemorySessionStore()
+    user_id = "user-1"
+    session_id = await _create_session(store, user_id)
+    knowledge = AsyncMock()
+    knowledge.query_factor.return_value = _matched_payload()
+    svc = ChatQueryService(
+        knowledge_client=knowledge,
+        session_store=store,
+        chat_model=FakeListChatModel(responses=["高锰酸盐指数可按标准方法测定。"]),
+        summarizer=FakeListChatModel(responses=["标题"]),
+        rewrite_model=FakeListChatModel(
+            responses=[
+                _rewrite_response(
+                    rewritten_query="高锰酸盐指数 怎么测？",
+                    factor_name="高锰酸盐指数",
+                )
+            ]
+        ),
+        char_threshold=100000,
+    )
+
+    await svc.query(
+        query="耗氧量检测方法是什么？",
+        request_id=None,
+        session_id=session_id,
+        user_id=user_id,
+    )
+
+    knowledge.query_factor.assert_awaited_once_with("高锰酸盐指数 怎么测？", "高锰酸盐指数")
+
+
+@pytest.mark.asyncio
+async def test_query_rewrite_accepts_json_with_model_reasoning_prefix():
+    store = InMemorySessionStore()
+    user_id = "user-1"
+    session_id = await _create_session(store, user_id)
+    knowledge = AsyncMock()
+    knowledge.query_factor.return_value = _matched_payload()
+    raw_rewrite = (
+        "Let me construct the JSON response.\n"
+        "</think>\n"
+        '{"should_query_knowledge":true,"known_supported_factor":true,'
+        '"rewritten_query":"色度 怎么测？","factor_name":"色度","confidence":0.98}'
+    )
+    svc = ChatQueryService(
+        knowledge_client=knowledge,
+        session_store=store,
+        chat_model=FakeListChatModel(responses=["色度可按标准方法测定。"]),
+        summarizer=FakeListChatModel(responses=["标题"]),
+        rewrite_model=FakeListChatModel(responses=[raw_rewrite]),
+        char_threshold=100000,
+    )
+
+    await svc.query(
+        query="色度怎么测？",
+        request_id=None,
+        session_id=session_id,
+        user_id=user_id,
+    )
+
+    knowledge.query_factor.assert_awaited_once_with("色度 怎么测？", "色度")
+
+
+@pytest.mark.asyncio
+async def test_query_returns_not_matched_reply_when_rewriter_cannot_infer_factor():
+    store = InMemorySessionStore()
+    user_id = "user-1"
+    session_id = await _create_session(store, user_id)
+    knowledge = AsyncMock()
+    svc = ChatQueryService(
+        knowledge_client=knowledge,
+        session_store=store,
+        chat_model=FakeListChatModel(responses=["不应调用"]),
+        summarizer=FakeListChatModel(responses=["标题"]),
+        rewrite_model=FakeListChatModel(
+            responses=[
+                _rewrite_response(
+                    should_query_knowledge=False,
+                    known_supported_factor=False,
+                    rewritten_query="",
+                    factor_name=None,
+                    confidence=0.1,
+                )
+            ]
+        ),
+        char_threshold=100000,
+    )
+
+    resp = await svc.query(
+        query="今天适合吃什么？",
+        request_id=None,
+        session_id=session_id,
+        user_id=user_id,
+    )
+
+    assert resp.code == "FACTOR_NOT_FOUND"
+    assert resp.data.reply == KNOWLEDGE_QUERY_NOT_MATCHED_REPLY
+    assert resp.data.factor is None
+    assert resp.data.sources == []
+    knowledge.query_factor.assert_not_called()
 
 
 @pytest.mark.asyncio

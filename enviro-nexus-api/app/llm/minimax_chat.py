@@ -1,6 +1,7 @@
 from langchain_openai import ChatOpenAI
 
 from app.config.settings import Settings
+from app.core.exceptions import LLMServiceError
 
 
 def _resolve_api_key(settings: Settings) -> str:
@@ -14,6 +15,10 @@ def _resolve_api_key(settings: Settings) -> str:
 
 
 def get_chat_model(settings: Settings, *, temperature: float = 0.3) -> ChatOpenAI:
+    api_key = settings.minimax_api_key.strip()
+    if not api_key:
+        raise LLMServiceError("未配置 MINIMAX_API_KEY，请在 .env 或环境变量中设置后重启服务")
+
     return ChatOpenAI(
         model=settings.minimax_model,
         api_key=_resolve_api_key(settings),
