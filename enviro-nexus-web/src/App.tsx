@@ -1,4 +1,4 @@
-import { ChatWorkbench } from "@/components/chat-workbench";
+import ChatWorkbench from "@/pages/ChatWorkbench";
 import "./App.css";
 
 function App() {
