@@ -34,19 +34,30 @@ export const apiMessageToChatMessage = (
   status: "ready",
 });
 
+const stripThinkTags = (text: string) =>
+  text
+    .replace(/<think>[\s\S]*?<\/think>/gi, "")
+    .replace(/<think>[\s\S]*$/gi, "")
+    .replace(/<\/think>/gi, "")
+    .trim();
+
+const titleFromMessages = (messages: ChatMessage[]) =>
+  messages.find((message) => message.role === "user")?.content.trim();
+
 export const sessionDetailToChatSession = (
   detail: Sessions.SessionDetailData,
 ): ChatSession => {
   const baseTime = new Date(detail.updated_at).getTime();
+  const messages = (detail.messages ?? []).map((message, index) =>
+    apiMessageToChatMessage(message, detail.session_id, index, baseTime),
+  );
 
   return {
     createdAt: new Date(detail.created_at).getTime(),
     id: detail.session_id,
-    messages: (detail.messages ?? []).map((message, index) =>
-      apiMessageToChatMessage(message, detail.session_id, index, baseTime),
-    ),
+    messages,
     messagesLoaded: true,
-    title: detail.title?.trim() || "新对话",
+    title: titleFromMessages(messages) || stripThinkTags(detail.title || "") || "新对话",
     updatedAt: baseTime,
   };
 };
@@ -58,6 +69,6 @@ export const sessionSummaryToChatSession = (
   id: item.session_id,
   messages: [],
   messagesLoaded: false,
-  title: item.title?.trim() || "新对话",
+  title: stripThinkTags(item.title || "") || "新对话",
   updatedAt: new Date(item.updated_at).getTime(),
 });
