@@ -83,13 +83,21 @@ const DEFAULT_USER_ID =
   (import.meta.env.VITE_USER_ID as string | undefined) ?? "user-001";
 
 const SUGGESTIONS = [
-  "COD 检测用什么标准方法？",
-  "GB 3838 与 GB 8978 标准有什么区别？",
-  "帮我整理 VOCs 现场采样的注意事项",
+  "水样 pH 值检测按哪个标准做？",
+  "CODMn 高锰酸盐指数的测定步骤是什么？",
+  "色度样品检测前需要怎么处理？",
+  "林格曼黑度现场观测有什么要求？",
+  "非甲烷总烃采样和分析要注意什么？",
 ];
+const SUGGESTION_DISPLAY_COUNT = 3;
 
 const createId = (prefix: string) =>
   `${prefix}_${Date.now().toString(36)}_${crypto.randomUUID().slice(0, 8)}`;
+
+const pickRandomSuggestions = () =>
+  [...SUGGESTIONS]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, SUGGESTION_DISPLAY_COUNT);
 
 const toTitle = (text: string) =>
   text.length > 24 ? `${text.slice(0, 24)}...` : text;
@@ -614,6 +622,7 @@ const ChatWorkbench = () => {
     string | null
   >(null);
   const activeRequestRef = useRef<ActiveRequest | null>(null);
+  const suggestedQuestions = useMemo(() => pickRandomSuggestions(), []);
 
   const activeSession = useMemo(
     () =>
@@ -1309,7 +1318,7 @@ const ChatWorkbench = () => {
                     </p>
                   </div>
                   <Suggestions className="mt-4">
-                    {SUGGESTIONS.map((suggestion) => (
+                    {suggestedQuestions.map((suggestion) => (
                       <Suggestion
                         disabled={requestStatus !== "ready"}
                         key={suggestion}
