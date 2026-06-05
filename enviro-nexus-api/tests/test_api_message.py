@@ -11,4 +11,4 @@ def test_query_rewrite_prompt_is_defined_in_api_message():
 
 
 def test_knowledge_not_matched_reply_is_defined_in_api_message():
-    assert KNOWLEDGE_QUERY_NOT_MATCHED_REPLY == "与知识库不匹配，请重试"
+    assert KNOWLEDGE_QUERY_NOT_MATCHED_REPLY == "当前知识库暂未收录该检测因子，请人工确认后再使用。"
