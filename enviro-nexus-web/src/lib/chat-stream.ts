@@ -39,8 +39,6 @@ export type ChatSession = {
   createdAt: number;
   updatedAt: number;
   messages: ChatMessage[];
-  /** 是否已从 GET /sessions/{id} 拉取过完整消息 */
-  messagesLoaded?: boolean;
 };
 
 export type ChatRequest = {

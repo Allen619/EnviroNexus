@@ -41,6 +41,9 @@ const stripThinkTags = (text: string) =>
     .replace(/<\/think>/gi, "")
     .trim();
 
+const stripThinkTitlePrefix = (text: string) =>
+  text.replace(/^<think>\r?\n?/i, "").trim();
+
 const titleFromMessages = (messages: ChatMessage[]) =>
   messages.find((message) => message.role === "user")?.content.trim();
 
@@ -56,7 +59,6 @@ export const sessionDetailToChatSession = (
     createdAt: new Date(detail.created_at).getTime(),
     id: detail.session_id,
     messages,
-    messagesLoaded: true,
     title: titleFromMessages(messages) || stripThinkTags(detail.title || "") || "新对话",
     updatedAt: baseTime,
   };
@@ -68,7 +70,6 @@ export const sessionSummaryToChatSession = (
   createdAt: new Date(item.created_at).getTime(),
   id: item.session_id,
   messages: [],
-  messagesLoaded: false,
-  title: stripThinkTags(item.title || "") || "新对话",
+  title: stripThinkTitlePrefix(item.title || "") || "新对话",
   updatedAt: new Date(item.updated_at).getTime(),
 });
