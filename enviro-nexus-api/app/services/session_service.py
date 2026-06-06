@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime, timezone
 
 from app.core.exceptions import SessionNotFoundError
+from app.llm.prompts import clean_title_output
 from app.schemas.session import SessionRecord, SessionSummary
 from app.schemas.sessions_api import SessionDetailData, SessionListData
 from app.services.session_store import SessionStore
@@ -19,6 +20,18 @@ class SessionService:
     def __init__(self, store: SessionStore) -> None:
         self._store = store
 
+    def _first_user_message(self, record: SessionRecord) -> str:
+        for message in record.messages:
+            if message.role == "user":
+                return message.content
+        return ""
+
+    def _display_title(self, record: SessionRecord, default: str) -> str:
+        first_user_message = self._first_user_message(record)
+        if first_user_message and (record.title or len(record.messages) >= 2):
+            return clean_title_output(record.title, first_user_message)
+        return record.title or default
+
     async def _get_owned(self, user_id: str, session_id: str) -> SessionRecord:
         record = await self._store.get(session_id)
         if record is None or record.user_id != user_id:
@@ -28,7 +41,7 @@ class SessionService:
     def _to_detail(self, record: SessionRecord) -> SessionDetailData:
         return SessionDetailData(
             session_id=record.session_id,
-            title=record.title,
+            title=self._display_title(record, default=""),
             created_at=record.created_at,
             updated_at=record.updated_at,
             messages=record.messages,
@@ -38,7 +51,7 @@ class SessionService:
         preview = ""
         if record.messages:
             preview = make_preview(record.messages[-1].content)
-        title = record.title or "新对话"
+        title = self._display_title(record, default="新对话")
         return SessionSummary(
             session_id=record.session_id,
             title=title,
