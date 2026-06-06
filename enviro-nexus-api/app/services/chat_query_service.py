@@ -20,6 +20,7 @@ from app.llm.prompts import (
     TITLE_SYSTEM_PROMPT,
     build_knowledge_block,
     build_title_input,
+    clean_title_output,
     fallback_title,
 )
 from app.schemas.chat_query import (
@@ -102,7 +103,7 @@ class ChatQueryService:
             )
             content = resp.content
             title = content if isinstance(content, str) else str(content)
-            record.title = title.strip()[:20]
+            record.title = clean_title_output(title, user_msg)
         except Exception:
             logger.warning("title generation failed for session=%s", record.session_id)
             record.title = fallback_title(user_msg)

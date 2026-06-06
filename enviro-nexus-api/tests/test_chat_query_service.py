@@ -383,6 +383,67 @@ async def test_query_generates_title_after_first_turn():
 
 
 @pytest.mark.asyncio
+async def test_query_persists_cleaned_title_after_first_turn():
+    store = InMemorySessionStore()
+    user_id = "user-1"
+    session_id = await _create_session(store, user_id)
+    knowledge = AsyncMock()
+    knowledge.query_factor.return_value = _matched_payload()
+    svc = ChatQueryService(
+        knowledge_client=knowledge,
+        session_store=store,
+        chat_model=FakeListChatModel(responses=["采用 HJ 828-2017 测定。"]),
+        summarizer=FakeListChatModel(
+            responses=["<think>分析首轮问答</think>COD测定咨询"]
+        ),
+        char_threshold=100000,
+    )
+
+    await svc.query(
+        query="COD怎么测",
+        factor_name="化学需氧量",
+        request_id=None,
+        session_id=session_id,
+        user_id=user_id,
+    )
+
+    loaded = await store.get(session_id)
+    assert loaded is not None
+    assert loaded.title == "COD测定咨询"
+
+
+@pytest.mark.asyncio
+async def test_query_title_fallback_when_generated_title_is_reasoning_residue():
+    store = InMemorySessionStore()
+    user_id = "user-1"
+    session_id = await _create_session(store, user_id)
+    knowledge = AsyncMock()
+    knowledge.query_factor.return_value = _matched_payload()
+    query_text = "COD怎么测"
+    svc = ChatQueryService(
+        knowledge_client=knowledge,
+        session_store=store,
+        chat_model=FakeListChatModel(responses=["采用 HJ 828-2017 测定。"]),
+        summarizer=FakeListChatModel(
+            responses=["<think>\nThe user is asking how to measure COD"]
+        ),
+        char_threshold=100000,
+    )
+
+    await svc.query(
+        query=query_text,
+        factor_name="化学需氧量",
+        request_id=None,
+        session_id=session_id,
+        user_id=user_id,
+    )
+
+    loaded = await store.get(session_id)
+    assert loaded is not None
+    assert loaded.title == fallback_title(query_text)
+
+
+@pytest.mark.asyncio
 async def test_query_title_fallback_on_summarizer_failure():
     store = InMemorySessionStore()
     user_id = "user-1"
@@ -407,3 +468,41 @@ async def test_query_title_fallback_on_summarizer_failure():
     loaded = await store.get(session_id)
     assert loaded is not None
     assert loaded.title == fallback_title(query_text)
+
+
+@pytest.mark.asyncio
+async def test_query_title_fallback_when_summarizer_returns_empty():
+    store = InMemorySessionStore()
+    user_id = "user-1"
+    session_id = await _create_session(store, user_id)
+    knowledge = AsyncMock()
+    knowledge.query_factor.return_value = KnowledgeFactorQueryPayload(matched=False)
+    query_text = "今天适合吃什么？"
+    svc = ChatQueryService(
+        knowledge_client=knowledge,
+        session_store=store,
+        chat_model=FakeListChatModel(responses=["不应调用"]),
+        summarizer=FakeListChatModel(responses=["   "]),
+        rewrite_model=FakeListChatModel(
+            responses=[
+                _rewrite_response(
+                    should_query_knowledge=False,
+                    known_supported_factor=False,
+                    rewritten_query="",
+                    factor_name=None,
+                    confidence=0.1,
+                )
+            ]
+        ),
+        char_threshold=100000,
+    )
+    await svc.query(
+        query=query_text,
+        request_id=None,
+        session_id=session_id,
+        user_id=user_id,
+    )
+    loaded = await store.get(session_id)
+    assert loaded is not None
+    assert loaded.title == fallback_title(query_text)
+    assert loaded.title != ""
